@@ -41,6 +41,17 @@ When changes have been committed to xmlGeoDbs
    ./test.exe $XMLGEODBSROOT/xml/flight/flightSegVols.xml \
    $outDir/flightOverlaps.txt verbose dump
 
+8. Run dumpIds.exe.  There is (currently, as of 6 May 2004) no way to
+   specify path for output.  It's called dumpIds.txt and ends up in
+   whatever directory the program was run from, so will have to be 
+   renamed:
+
+   ./dumpIds.exe $XMLGEODBSROOT/xml/flight/flight.xml
+   mv dumpIds.txt $outDir
+
+9. Optionally run constsDoc.exe, summary.exe on top-level files in
+   $XMLGEODBSROOT/xml/latAssembly
+
                ---------------------------------------------
 
 When a new rtag has been made for xmlGeoDbs,
@@ -54,10 +65,10 @@ When a new rtag has been made for xmlGeoDbs,
    and define an environment variable, say outDir, to point to it 
    as above.
 
-3-7. Execute steps 3-7 as above.
+3-9. Execute steps 3-9 as above.
 
 
-8. If output seems satisfactory, make a soft link to the new output directory
+10. If output seems satisfactory, make a soft link to the new output directory
 
      ln -s $outDir $outDir/../RELEASED
 
