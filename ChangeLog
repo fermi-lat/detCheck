@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: riccardo  Mon Oct  6 07:15:14 PDT 2003
+detCheck/src
+
+Modified Files:
+	HepRep.cxx HepRepSectionsVisitor.cxx HepRepSectionsVisitor.h 
+Log Message:
+Added IdName features in the output of HepRep
+
+    *
+------------------------------------------------------------
 User: riccardo  Mon Oct  6 04:16:21 PDT 2003
 detCheck/src
 
