@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.6 2002/01/17 05:44:02 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.7 2002/01/17 22:08:59 jrb Exp $
 
 #include <cmath>
 #include <cassert>
@@ -20,6 +20,12 @@
 #include "detModel/Sections/AxisMPos.h"
 #include "detModel/Sections/Section.h"
 #include "detModel/Materials/MatCollection.h"
+
+#ifdef WIN32
+  typedef __int64 int64;
+#else
+  typedef long long int64;
+#endif
 
 namespace detCheck {
 
@@ -44,7 +50,6 @@ namespace detCheck {
 
     for (MatMapIt matIt = m_mats.begin(); matIt != m_mats.end();
          ++matIt) {
-      //      delete matIt->second->logVols;
       delete matIt->second;
     }
 
@@ -53,9 +58,11 @@ namespace detCheck {
   void SolidStats::report(std::string outfileName) {
     bool html = false;
     bool allocStream = false;
+    double TO_CU_CM = 0.001;
+    double GM_TO_KG = 0.001;
 
     if (outfileName.size() == 0) {
-      m_out = &std::cout;  // or out = new ostream(std::out);  ?
+      m_out = &std::cout; 
     }
     else {
       m_out = new std::ofstream(outfileName.c_str());
@@ -73,52 +80,89 @@ namespace detCheck {
       (*m_out) << "<table cellpadding='3' border='1'>" << std::endl;
       (*m_out) << "<tr bgcolor='#c0ffc0' align ='left'>";
       (*m_out) << "<th>Material Name</th><th># Log. Vol.</th>";
-      (*m_out) << "<th># Phys. Vol.</th><th>Volume (cubic mm)</th></tr>" 
+      (*m_out) << "<th># Phys. Vol.</th><th>Volume (cubic cm)</th>";
+      (*m_out) << "<th>Mass (grams)</th></tr>" 
                << std::endl;
     }
     else {  // just title
       (*m_out) << "Materials Summary" << std::endl;
     }
 
+    // Accumulators for Totals row
+    unsigned logCount = 0;
+    unsigned physCount = 0;
+    double   volTotal = 0.0;
+    int64 massTotal = 0;
+
     // Always output summary per-material information 
     for (MatMapIt mapIt = m_mats.begin(); mapIt != m_mats.end(); ++mapIt) {
       Material* mat = mapIt->second;
 
       if (!mat->logCount) continue;
+      double mass = mat->cuVol * TO_CU_CM * mat->density;
+      int64 intMass = mass;
+      int64 intVol = (mat->cuVol * TO_CU_CM);
+      
+      if ((mapIt->first).compare("Vacuum")) {
+        logCount += mat->logCount;
+        physCount += mat->physCount;
+        volTotal += mat->cuVol;
+        massTotal += intMass;
+      }
 
       if (html) {
         (*m_out) << "<tr><td>" << mapIt->first << "</td><td align='right'>" 
                  << mat->logCount << "</td><td align='right'>" 
-                 << mat->physCount << "</td><td>" 
-                 << mat->cuVol << "</td></tr>" << std::endl;
+                 << mat->physCount << "</td><td align='right'>" 
+                 << intVol << "</td><td align='right'>"
+                 << intMass
+                 << "</td></tr>" << std::endl;
       }
       else {
         (*m_out) << " " << mapIt->first <<  ":  "
                  << "  #Log = " << mat->logCount
                  << "  #Phys = " << mat->physCount 
-                 << "  Total volume = " << mat->cuVol << " cu mm" << std::endl;
+                 << "  Total volume = " << intVol << " cu cm" 
+                 << "  Mass = " <<  intMass << " kg " << std::endl;
       }
     }
 
     // Extra output for html
-    if (html) { // first close old table, then start new one
+    if (html) { // Put in totals line, close old table. Then start new one
+      int64 intVolTotal = (volTotal * TO_CU_CM);
+      
+      (*m_out) << "<tr><td><b>Totals (no vac)</b></td><td align='right'><b>" 
+               << logCount << "</b></td><td align='right'><b>" << physCount 
+               << "</b></td><td align='right'><b>" << intVolTotal 
+               << "</b></td><td align='right'><b>" 
+               << massTotal << "</b></td>";
+ 
       (*m_out) << "</table><h2 align='center'>Summary by Logical Volume</h2>"
                << "<table cellpadding='3' border='1'>" 
                << "<tr bgcolor='#c0ffc0' align='left'>" << std::endl;
-      (*m_out) << "<th>Name</th><th>Volume (cu mm)</th><th>Convex vol</th>"
+      (*m_out) << "<th>Name</th><th>Volume (cu cm)</th><th>Convex vol</th>"
                << "<th> # Phys.</th>"
-               << "<th>Total volume</th><th>Material</th></tr>"
-               << std::endl;
+               << "<th>Total volume</th><th>Material</th>"
+               << "<th>Mass (grams)</th></tr>" << std::endl;
     
       for (LogVolMapIt logIt = m_logVols.begin(); logIt != m_logVols.end();
            ++logIt) {
         LogVol* log = logIt->second;
+        int64 intVol = log->vol * TO_CU_CM;
+        int64 intConvexVol = log->convexVol * TO_CU_CM;
+        int64 intTotalVol = log->vol * log->nCopy * TO_CU_CM;
+        MatMapIt it = m_mats.find(log->matName);
+        double density = it->second->density;
+        int64 intMass = density * log->vol * log->nCopy * TO_CU_CM;
+
         (*m_out) << "<tr><td>" << log->name;
         if (log->envelope) (*m_out) << "(E)";
-        (*m_out) << "</td><td>" << log->vol << "</td><td>" 
-                 << log->convexVol << "</td><td align='right'>" 
-                 << log->nCopy << "</td><td>" << (log->vol*log->nCopy)
-                 << "</td><td>" << log->matName << "</td></tr>" 
+        (*m_out) << "</td><td align='right'>" << intVol 
+                 << "</td><td align='right'>" << intConvexVol 
+                 << "</td><td align='right'>" 
+                 << log->nCopy << "</td><td align='right'>" << intTotalVol
+                 << "</td><td>" << log->matName << "</td><td align='right'>"
+                 <<  intMass << "</td></tr>" 
                  << std::endl;
       }
         
@@ -188,12 +232,6 @@ namespace detCheck {
       m_topName = m_top->getName();
     }
     m_top->AcceptNotRec(this);
-
-    // Increment copy count for top volume since it won't be
-    // positioned inside anything else
-    // *** I think this was a mistake
-    //    LogVol* ourVol = findLogVol(m_top->getName());
-    /////  ++(ourVol->nCopy);
   }
 
   void SolidStats::visitEnsemble(detModel::Ensemble* ens) {
