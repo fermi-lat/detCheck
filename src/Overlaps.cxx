@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.4 2003/06/19 16:23:08 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.5 2003/06/27 17:04:18 jrb Exp $
 
 #include <fstream>
 #include <cmath>
@@ -78,6 +78,7 @@ namespace detCheck {
                    << vol->getName() << std::endl;
           if (verbose) printChildren(ens);
         }
+        if (m_dump) printChildren(ens);
         ++nCompos;
       }
       finalOk = finalOk & ok;
@@ -261,19 +262,18 @@ namespace detCheck {
                                std::vector<Location>& locs) {
     detModel::BoundingBox *envBB = compos->getEnvelope()->getBBox();
     detModel::BoundingBox *compBB = compos->getBBox();
+    bool retStatus =
+      ((envBB->getXDim() + m_eps*envBB->getXDim() >= compBB->getXDim() ) &&
+       (envBB->getYDim() + m_eps*envBB->getYDim() >= compBB->getYDim() ) &&
+       (envBB->getZDim() + m_eps*envBB->getZDim() >= compBB->getZDim() ) );
 
-    
-
-    if ((envBB->getXDim() + m_eps*envBB->getXDim() >= compBB->getXDim() ) &&
-        (envBB->getYDim() + m_eps*envBB->getYDim() >= compBB->getYDim() ) &&
-        (envBB->getZDim() + m_eps*envBB->getZDim() >= compBB->getZDim() ) )
-      if (!m_dump) {        return true; }
-      else {
-        *m_out << "Envelope " << compos->getEnvelopeRef() 
-               << " for composition volume " 
-               << compos->getName() << std::endl;
-      }
+    if ((!m_dump) && (retStatus)) {        return true; }
     else {
+      *m_out << "Envelope " << compos->getEnvelopeRef() 
+             << " for composition volume " 
+             << compos->getName() << std::endl;
+    }
+    if (!retStatus) {
     (*m_out) << "Envelope " << compos->getEnvelopeRef() 
              << " too small for volume " 
              << compos->getName() << std::endl;
@@ -297,7 +297,7 @@ namespace detCheck {
                  << ", " << locs[iLoc].z[1] << ")" << std::endl;
       }
     }
-    return false;
+    return retStatus;
   }
 
   // Assuming that loc is formed in such a way that x[0] < x[1],
