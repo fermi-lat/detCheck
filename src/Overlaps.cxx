@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.6 2003/07/10 17:56:01 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.7 2004/03/19 19:06:32 jrb Exp $
 
 #include <fstream>
 #include <cmath>
@@ -304,21 +304,21 @@ namespace detCheck {
   bool Overlaps::pairOk(Location* loc1, Location* loc2) {
     // First check takes scale of items to be compared into account
     bool ok = 
-      (loc1->x[0] + m_eps * abs(loc1->x[0]) >= loc2->x[1]) || 
-      (loc2->x[0] + m_eps * abs(loc2->x[0])>= loc1->x[1]) ||
-      (loc1->y[0] + m_eps * abs(loc1->y[0])>= loc2->y[1]) || 
-      (loc2->y[0] + m_eps * abs(loc2->y[0])>= loc1->y[1]) ||
-      (loc1->z[0] + m_eps * abs(loc1->z[0])>= loc2->z[1]) || 
-      (loc2->z[0] + m_eps * abs(loc2->z[0])>= loc1->z[1]);
+      (loc1->x[0] + m_eps * fabs(loc1->x[0]) >= loc2->x[1]) || 
+      (loc2->x[0] + m_eps * fabs(loc2->x[0])>= loc1->x[1]) ||
+      (loc1->y[0] + m_eps * fabs(loc1->y[0])>= loc2->y[1]) || 
+      (loc2->y[0] + m_eps * fabs(loc2->y[0])>= loc1->y[1]) ||
+      (loc1->z[0] + m_eps * fabs(loc1->z[0])>= loc2->z[1]) || 
+      (loc2->z[0] + m_eps * fabs(loc2->z[0])>= loc1->z[1]);
     // However, this sort of comparison can fail if both items are
     // essentially zero, so check for this, too
     if (!ok) {
-      ok = (( (abs(loc1->x[0]) < m_eps) && (abs(loc2->x[1]) < m_eps) ) ||
-            ( (abs(loc1->x[1]) < m_eps) && (abs(loc2->x[0]) < m_eps) ) ||
-            ( (abs(loc1->y[0]) < m_eps) && (abs(loc2->y[1]) < m_eps) ) ||
-            ( (abs(loc1->y[1]) < m_eps) && (abs(loc2->y[0]) < m_eps) ) ||
-            ( (abs(loc1->z[0]) < m_eps) && (abs(loc2->z[1]) < m_eps) ) ||
-            ( (abs(loc1->z[1]) < m_eps) && (abs(loc2->z[0]) < m_eps) ) );
+      ok = (( (fabs(loc1->x[0]) < m_eps) && (fabs(loc2->x[1]) < m_eps) ) ||
+            ( (fabs(loc1->x[1]) < m_eps) && (fabs(loc2->x[0]) < m_eps) ) ||
+            ( (fabs(loc1->y[0]) < m_eps) && (fabs(loc2->y[1]) < m_eps) ) ||
+            ( (fabs(loc1->y[1]) < m_eps) && (fabs(loc2->y[0]) < m_eps) ) ||
+            ( (fabs(loc1->z[0]) < m_eps) && (fabs(loc2->z[1]) < m_eps) ) ||
+            ( (fabs(loc1->z[1]) < m_eps) && (fabs(loc2->z[0]) < m_eps) ) );
     }
 
     if (!ok) {
