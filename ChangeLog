@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Thu Jul 10 10:55:25 PDT 2003
+detCheck/doc
+
+Modified Files:
+	standardRun.txt 
+Log Message:
+Add a step to run the overlap checker in dump mode
+
+    *
+------------------------------------------------------------
 User: jrb  Fri Jun 27 11:49:01 PDT 2003
 detCheck/doc
 
