@@ -1,6 +1,7 @@
 /** @file release.notes
  *  Package detCheck
  * Coordinator:  J. Bogart
+ * 19-jun-2003: jrb - tag v1r1p0 Increase DEFAULT_EPSILON to 10**(-5)
  * 27-jan-2003: jrb - tag v1r1  Includes 7-month-old app. to generate 
            hmtl constants file, heretofore untagged
  * 10-may-2002: jrb - tag v1r0p1  
