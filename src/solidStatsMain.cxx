@@ -44,6 +44,8 @@ int main(int argc, char* argv[]) {
 
   bool verbose = (argc > 5);
 
+  bool html = false;       
+
   detModel::Manager* manager = detModel::Manager::getPointer();
 
   manager->setBuilder(new detModel::XercesBuilder);
@@ -62,7 +64,7 @@ int main(int argc, char* argv[]) {
   manager->startVisitor(sStats);
 
   // Output results
-  sStats->report(std::string(outFile), verbose);
+  sStats->report(std::string(outFile), verbose, html);
 
   return true;
 }
