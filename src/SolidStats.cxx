@@ -1,6 +1,7 @@
-// $Header:  $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.1.1.1 2002/01/15 22:25:01 jrb Exp $
 
 #include <cmath>
+#include <cassert>
 #include "detCheck/SolidStats.h"
 
 // may need need some or all of the following:
@@ -48,7 +49,7 @@ namespace detCheck {
       m_out = &std::cout;  // or out = new ostream(std::out);  ?
     }
     else {
-      m_out = new ofstream(errfileName.c_str());
+      m_out = new std::ofstream(errfileName.c_str());
       allocStream = true;
     }
 
