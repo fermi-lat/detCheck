@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Thu Jan  8 17:01:24 PST 2004
+detCheck/src
+
+Modified Files:
+	dumpIds.cxx 
+Log Message:
+Add geometry information to the output of this dump-by-id diagnostic
+
+    *
+------------------------------------------------------------
 User: jrb  Fri Nov 21 12:26:36 PST 2003
 detCheck/src
 
