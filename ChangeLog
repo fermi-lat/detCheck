@@ -1,4 +1,18 @@
 ------------------------------------------------------------
+User: jrb  Thu May  9 16:00:21 PDT 2002
+detCheck/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+1. Wildcards for dependencies
+2. Add dependency on xmlGeoDbs
+3. Put summary.exe application in group = Linux. Will not get built by usual
+   gmake which is appropriate because it is only used at SLAC Linux 
+   installation.
+
+    *
+------------------------------------------------------------
 User: jrb  Fri Jan 18 16:36:36 PST 2002
 detCheck/src
 
