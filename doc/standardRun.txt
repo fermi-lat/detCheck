@@ -6,11 +6,9 @@ When changes have been committed to xmlGeoDbs
    setenv outDir /afs/slac/www/exp/glast/ground/software/geometry/data/HEAD
 
 3. make sure that both constsDoc.exe and summary.exe exist in bin directory
-   of detCheck.  Note regular build will not build summary.exe since it
-   only compiles on Linux.  To build summary.exe, from cmt directory issue
-          gmake Linux
+   of detCheck.  
 
-4. cd detCheck/rh72_gcc2953
+4. cd detCheck/rh72_gcc32
    (or whatever the binary directory is called)
 
    or (better option) use glastpack to invoke executables in steps
@@ -46,7 +44,7 @@ When changes have been committed to xmlGeoDbs
    ./dumpIds.exe $XMLGEODBSROOT/xml/flight/flight.xml  $outDir/dumpIds.txt
 
 9. Optionally run constsDoc.exe, summary.exe on top-level files in
-   $XMLGEODBSROOT/xml/latAssembly
+   $XMLGEODBSROOT/xml/latAssembly or other subdirectories of interest
 
                ---------------------------------------------
 
