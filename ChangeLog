@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Tue May 11 17:24:06 PDT 2004
+detCheck/src
+
+Modified Files:
+	mainpage.h 
+Log Message:
+Document (optional) output file argument for dumpIds.exe
+
+    *
+------------------------------------------------------------
 User: jrb  Tue May 11 17:21:03 PDT 2004
 detCheck/src
 
