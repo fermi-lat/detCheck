@@ -1,4 +1,4 @@
-// $Header:  $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/SolidStats.h,v 1.1.1.1 2002/01/15 22:25:01 jrb Exp $
 
 #include <string>
 #include <iostream>
@@ -108,12 +108,12 @@ namespace detCheck {
       double      cuVol;       /**< in mm**3 */
     }   Material;
       
-    typedef map<std::string, Material*> MatMap;
+    typedef std::map<std::string, Material*> MatMap;
     typedef MatMap::iterator MatMapIt;
     
     MatMap m_mats;
 
-    typedef map<std::string, LogVol*> LogVolMap;
+    typedef std::map<std::string, LogVol*> LogVolMap;
     typedef LogVolMap::iterator  LogVolMapIt;
 
     LogVolMap m_logVols;
