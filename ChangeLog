@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Fri Jan 18 16:36:36 PST 2002
+detCheck/src
+
+Modified Files:
+	SolidStats.cxx 
+Log Message:
+Add time stamp to report() output 
+
+    *
+------------------------------------------------------------
 User: jrb  Fri Jan 18 16:36:22 PST 2002
 detCheck/detCheck
 
