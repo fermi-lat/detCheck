@@ -1,5 +1,15 @@
 ------------------------------------------------------------
 User: jrb  Tue Jan 15 15:23:15 PST 2002
+detCheck/src
+
+Modified Files:
+	Overlaps.cxx SolidStats.cxx 
+Log Message:
+Fixes to compile on Windows
+
+    *
+------------------------------------------------------------
+User: jrb  Tue Jan 15 15:23:15 PST 2002
 detCheck/detCheck
 
 Modified Files:
