@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: jrb  Fri May  2 14:17:57 PDT 2003
+detCheck/src
+
+Modified Files:
+	Overlaps.cxx 
+Log Message:
+Used scaled slop (epsilon, in polite society) when checking for
+overlaps to avoid false positives
+
+    *
+------------------------------------------------------------
 User: jrb  Fri May  2 14:17:14 PDT 2003
 detCheck/doc
 
