@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Fri Jan 18 11:05:00 PST 2002
+detCheck/src
+
+Modified Files:
+	SolidStats.cxx mainpage.h solidStatsMain.cxx 
+Log Message:
+Done formatting tables; still could use versioning information
+
+    *
+------------------------------------------------------------
 User: jrb  Thu Jan 17 14:08:59 PST 2002
 detCheck/src
 
