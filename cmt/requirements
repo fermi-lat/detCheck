@@ -1,5 +1,5 @@
 package detCheck
-# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/cmt/requirements,v 1.2 2002/05/09 23:00:20 jrb Exp $
+# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/cmt/requirements,v 1.3 2002/05/30 22:43:39 jrb Exp $
 
 use detModel v2r*
 use xmlGeoDbs v1r*
@@ -13,10 +13,12 @@ apply_pattern package_headers
 ##   ../detCheck/*.h
 
 library detCheck -no_share ${detCheck_headers} -no_share \
-   Overlaps.cxx SolidStats.cxx
+   Overlaps.cxx SolidStats.cxx HepRepSectionsVisitor.cxx
 
 ##private
 application test overlapsMain.cxx Overlaps.cxx
+
+application heprep HepRep.cxx HepRepSectionsVisitor.cxx
 
 # Only can build this app on Linux (doesn't compile on Windows).
 # Fortunately, don't *need* to build it anywhere else.
