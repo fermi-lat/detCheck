@@ -116,7 +116,9 @@ void  HepRepSectionsVisitor::visitSection(Section* section)
     /// Now for the Instance Tree
     out << "<instancetree name=\"detModel\" version=\"1.0\" reqtypetree=\"\" typetreename=\"detModel\" typetreeversion=\"1.0\"> " << std::endl;
     setMode("instance");
+    m_actualName.push_back(vol->getName());
     vol->AcceptNotRec(this);
+    m_actualName.pop_back();
     out << "</instancetree>" << std::endl;
     
     // Lets close the HepRep
@@ -143,7 +145,7 @@ void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
     }
   else
     {
-      out << "<instance type=\"" << ensemble->getName() << "\">" << std::endl;
+      out << "<instance type=\"" << getFullName()  << "\">" << std::endl;
       out << "<attvalue name=\"ID\" value =\""<< m_actualID.name() << "\" showlabel =\"\"/>" << std::endl;
       
       xmlUtil::Identifier identifier;
@@ -167,7 +169,11 @@ void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
   std::vector<std::string> types;
   for(i=p.begin(); i!=p.end();i++)
     if(m_mode == "instance")
+    {
+      m_actualName.push_back(((*i)->getVolume())->getName());
       (*i)->AcceptNotRec(this);
+      m_actualName.pop_back();     
+    }
     else
       {
           std::string name = (*i)->getVolume()->getName();
@@ -230,7 +236,8 @@ void  HepRepSectionsVisitor::visitBox(Box* box)
     }
   else
     {
-      out << "<instance type=\"" << box->getName() << "\">" << std::endl;
+      // Here we build the full qualified Name of the Type
+      out << "<instance type=\"" << getFullName()  << "\">" << std::endl;
       out << "<attvalue name=\"ID\" value =\""<< m_actualID.name() << "\" showlabel =\"\"/>" << std::endl;
       xmlUtil::Identifier identifier;
       for(int ii=0;ii<m_actualID.size();ii++)
@@ -398,5 +405,19 @@ void  HepRepSectionsVisitor::visitSeg(Seg*)
 }
 
 
+// Return the full qualified Name of the Type
+std::string HepRepSectionsVisitor::getFullName()
+{
+  std::string fullName = "";
+
+  for (unsigned int i=0;i<m_actualName.size()-1; i++)
+  {
+    fullName = fullName + m_actualName[i] + "/";
+  }
+  fullName = fullName + m_actualName[m_actualName.size()-1];
+
+  return fullName;
+}
+  
 
 }

@@ -93,6 +93,9 @@ namespace detModel{
     void setPrefixTransform(HepTransform3D t){m_prefixTransform = t;};
 
     void setIdDictionary(xmlUtil::IdDict* id){m_idDictionary = id;};
+
+    /// Return the full qualified name of the actual instance
+    std::string getFullName();    
   private:
     std::string actualVolume;
     std::ofstream out;
@@ -103,14 +106,17 @@ namespace detModel{
     std::vector<HepTransform3D> m_actualTransform;
     HepTransform3D m_prefixTransform;
     std::vector<std::string> m_types;
+
+    /// This is used to build the full qualified name
+    std::vector<std::string> m_actualName;
     
     /// This is the identifiers used during the m_volMap building
-      idents::VolumeIdentifier m_actualID;    
-      idents::VolumeIdentifier m_idPrefix;    
+    idents::VolumeIdentifier m_actualID;    
+    idents::VolumeIdentifier m_idPrefix;    
       
-      xmlUtil::IdDict* m_idDictionary;
-      /// This map holds the colors for the material
-        std::map <std::string, Color*> colorsMap;
+    xmlUtil::IdDict* m_idDictionary;
+    /// This map holds the colors for the material
+    std::map <std::string, Color*> colorsMap;
     Gdd* m_gdd;
   };
 }
