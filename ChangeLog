@@ -1,4 +1,19 @@
 ------------------------------------------------------------
+User: jrb  Fri Nov 21 12:26:36 PST 2003
+detCheck/src
+
+Modified Files:
+	HepRep.cxx HepRepSectionsVisitor.cxx HepRepSectionsVisitor.h 
+Log Message:
+1. Fix to rotation bug in heprep application (however, chances are it 
+   will not properly
+   handle rotations with more than one of components about-x, about-y, 
+   about-z set non-zero).
+2. Enhance command-line interface to heprep.exe so that caller may 
+   specify output file 
+
+    *
+------------------------------------------------------------
 User: jrb  Fri Nov 21 12:24:06 PST 2003
 detCheck/cmt
 
