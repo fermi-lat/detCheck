@@ -1,4 +1,16 @@
 ------------------------------------------------------------
+User: jrb  Wed Jan 16 21:44:02 PST 2002
+detCheck/src
+
+Modified Files:
+	SolidStats.cxx solidStatsMain.cxx 
+Log Message:
+Don't count envelope volumes in per-material cubic volume sums 
+(still got plenty of nothing)
+Clean up output formatting.
+
+    *
+------------------------------------------------------------
 User: jrb  Wed Jan 16 18:12:27 PST 2002
 detCheck/src
 
