@@ -2,6 +2,7 @@
  *  Package detCheck
  * Coordinator:  J. Bogart
 
+ * 21-oct-2004:jrb v1r2p6  Really do it this time
  * 21-oct-2004:jrb v1r2p5  Add version line to requirements
  * 21-oct-2004:jrb v1r2p4  Minor changes to standardRun.txt
  * 17-aug-2004:jrb v1r2p3  Add use's which used to be inherited from detModel
