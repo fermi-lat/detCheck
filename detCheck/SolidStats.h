@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/SolidStats.h,v 1.1.1.1 2002/01/15 22:25:01 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/SolidStats.h,v 1.2 2002/01/15 23:23:15 jrb Exp $
 
 #include <string>
 #include <iostream>
@@ -118,6 +118,7 @@ namespace detCheck {
 
     LogVolMap m_logVols;
 
+    std::string m_choiceMode;
     /// Utility to find our data structure for a logical volume, given 
     /// its name.
     LogVol *findLogVol(std::string name);
