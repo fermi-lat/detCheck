@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: jrb  Fri Nov 21 12:24:06 PST 2003
+detCheck/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+See if VC 7 can build summary.exe without complaints (take it out
+of special Linux-only group)
+
+    *
+------------------------------------------------------------
 User: riccardo  Fri Oct 24 08:19:06 PDT 2003
 detCheck/src
 
