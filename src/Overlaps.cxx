@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.3 2003/05/02 21:17:57 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.4 2003/06/19 16:23:08 jrb Exp $
 
 #include <fstream>
 #include <cmath>
@@ -26,8 +26,10 @@ namespace detCheck {
     m_eps = DEFAULT_EPSILON;
   }
 
-  bool Overlaps::check(std::string errfileName, bool verbose) {
+  bool Overlaps::check(std::string errfileName, bool verbose, bool dump) {
+    //    m_verbose = verbose;
     m_verbose = verbose;
+    m_dump = dump;
     bool allocStream = false;
     if (errfileName.size() == 0) {
       m_out = &std::cout;  // or out = new ostream(std::out);  ?
@@ -265,11 +267,17 @@ namespace detCheck {
     if ((envBB->getXDim() + m_eps*envBB->getXDim() >= compBB->getXDim() ) &&
         (envBB->getYDim() + m_eps*envBB->getYDim() >= compBB->getYDim() ) &&
         (envBB->getZDim() + m_eps*envBB->getZDim() >= compBB->getZDim() ) )
-        return true;
-
+      if (!m_dump) {        return true; }
+      else {
+        *m_out << "Envelope " << compos->getEnvelopeRef() 
+               << " for composition volume " 
+               << compos->getName() << std::endl;
+      }
+    else {
     (*m_out) << "Envelope " << compos->getEnvelopeRef() 
              << " too small for volume " 
              << compos->getName() << std::endl;
+    }
 
     // print out coordinates for all children and size of envelope for
     // the real fans
