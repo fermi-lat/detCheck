@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: riccardo  Fri Oct 24 08:19:06 PDT 2003
+detCheck/src
+
+Modified Files:
+	HepRepSectionsVisitor.cxx 
+Log Message:
+Fixed a small bug in the color output of the HepRep visitor ..
+
+    *
+------------------------------------------------------------
 User: jrb  Tue Oct  7 07:07:13 PDT 2003
 detCheck/doc
 
