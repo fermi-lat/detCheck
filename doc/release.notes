@@ -1,7 +1,9 @@
 /** @file release.notes
  *  Package detCheck
  * Coordinator:  J. Bogart
- * 17-jun-2003: jrb - tag v1r1p1 Add dump option to overlap diagnostic
+ * 27-jun-2003 Correct units (kg --> gm) in console output for 
+ *             volume summary diagnositic
+ * 27-jun-2003: jrb - tag v1r1p1 Add dump option to overlap diagnostic
  * 19-jun-2003: jrb - tag v1r1p0 Increase DEFAULT_EPSILON to 10**(-5)
  * 27-jan-2003: jrb - tag v1r1  Includes 7-month-old app. to generate 
            hmtl constants file, heretofore untagged
