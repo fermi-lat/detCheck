@@ -13,9 +13,6 @@
 ///     file for output                    [std::cout]
 ///     top volume name                    ["*", i.e., top volume of section]
 ///     <choice> mode                      ["propagate"]
-///     verbose mode                       [false]
-/// Invoking this program with any value at all for the last argument
-/// will turn on verbose mode.
 int main(int argc, char* argv[]) {
 
   char* inFile = "../xml/test-solidStats.xml";
@@ -42,10 +39,6 @@ int main(int argc, char* argv[]) {
     choiceMode = argv[4];
   }
 
-  bool verbose = (argc > 5);
-
-  bool html = false;       
-
   detModel::Manager* manager = detModel::Manager::getPointer();
 
   manager->setBuilder(new detModel::XercesBuilder);
@@ -64,7 +57,7 @@ int main(int argc, char* argv[]) {
   manager->startVisitor(sStats);
 
   // Output results
-  sStats->report(std::string(outFile), verbose, html);
+  sStats->report(std::string(outFile));
 
   return true;
 }
