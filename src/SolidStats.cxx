@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.1.1.1 2002/01/15 22:25:01 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.2 2002/01/15 23:23:15 jrb Exp $
 
 #include <cmath>
 #include <cassert>
@@ -6,6 +6,7 @@
 
 // may need need some or all of the following:
 
+#include "detModel/Management/Manager.h"
 #include "detModel/Sections/Volume.h"
 #include "detModel/Sections/BoundingBox.h"
 #include "detModel/Sections/Ensemble.h"
@@ -14,6 +15,7 @@
 #include "detModel/Sections/Shape.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Choice.h"
 #include "detModel/Sections/PosXYZ.h"
 #include "detModel/Sections/AxisMPos.h"
 #include "detModel/Sections/Section.h"
@@ -24,7 +26,12 @@ namespace detCheck {
   double SolidStats::PI = 0;    // Set properly at first use
   SolidStats::SolidStats(std::string topVolume) : 
     m_gdd(0), m_topName(topVolume), m_out(0), m_verbose(false)
-  {setRecursive(0); }
+  {
+    setRecursive(0);
+    detModel::Manager* man = detModel::Manager::getPointer();
+
+    m_choiceMode = man->getMode();
+  }
 
   SolidStats::~SolidStats() {
     // Run through solids map, deleting each individually allocated 
@@ -172,7 +179,6 @@ namespace detCheck {
       ourLogVol->nCopy = 0;
       ourLogVol->envelope = false;
 
-      //      m_logVols.insert(pair<std::string, LogVol*>(ens->getName(), ourLogVol));
       m_logVols[ens->getName()] = ourLogVol;
     }
     else {
@@ -190,7 +196,14 @@ namespace detCheck {
       // if it isn't already  and updates nCopy 
       pos->AcceptNotRec(this);
 
-      LogVol* logVol = findLogVol(pos->getVolumeRef()); 
+      detModel::Volume* ourVol = pos->getVolume();
+      // If it was a Choice, resolve it first
+      if (detModel::Choice* ch = dynamic_cast<detModel::Choice*>(ourVol)) {
+        ourVol = ch->getVolumeByMode(m_choiceMode);
+      }
+
+      LogVol* logVol = findLogVol(ourVol->getName());
+      //      LogVol* logVol = findLogVol(pos->getVolumeRef()); 
       assert(logVol != 0);
 
 
@@ -225,20 +238,32 @@ namespace detCheck {
   void SolidStats::visitPosXYZ(detModel::PosXYZ* pos) {
     // First visit our volume   
     detModel::Volume* ourVol = pos->getVolume();
+
+    // If it was a Choice, resolve it first
+    if (detModel::Choice* ch = dynamic_cast<detModel::Choice*>(ourVol)) {
+      ourVol = ch->getVolumeByMode(m_choiceMode);
+    }
     ourVol->AcceptNotRec(this);
 
     // Increment its copy count.
     LogVol* logVol = findLogVol(ourVol->getName());
+    assert(logVol != 0);
     logVol->nCopy++;
   }
 
   void SolidStats::visitAxisMPos(detModel::AxisMPos* axisPos) {
     // First visit our volume   
     detModel::Volume* ourVol = axisPos->getVolume();
+
+    // If it was a Choice, resolve it first.
+    if (detModel::Choice* ch = dynamic_cast<detModel::Choice*>(ourVol)) {
+      ourVol = ch->getVolumeByMode(m_choiceMode);
+    }
     ourVol->AcceptNotRec(this);
 
     // Increment its copy count.
     LogVol* logVol = findLogVol(ourVol->getName());
+    assert(logVol != 0);
     logVol->nCopy += axisPos->getNcopy();
   }
 
