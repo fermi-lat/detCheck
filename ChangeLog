@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: riccardo  Wed Mar  9 00:43:38 PST 2005
+detCheck/src
+
+Modified Files:
+	HepRepSectionsVisitor.cxx 
+Log Message:
+Solved a bug of the HepRep visitor that was producing bad HepRep files when the geometry contains choice volumes.
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v1r4, operation: add
 Package: detCheck
