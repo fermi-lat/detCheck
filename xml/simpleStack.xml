@@ -1,0 +1,51 @@
+<?xml version="1.0"  ?>
+
+<!-- $Header $ -->
+<!--  Simple example file using gdd.dtd, suitable as input to
+      detModel test program test.exe.
+       All volumes are boxes or stacks
+  -->
+
+<!DOCTYPE gdd SYSTEM "/u/ey/jrb/glast/jrbPack/xmlUtil/v2r2/xml/gdd.dtd" 
+  [
+    <!ENTITY Materials SYSTEM "materials.xml">
+  ]
+>
+
+<gdd CVSid="$Id not yet archived, test version $" DTDversion="2.0"
+     substituted="false" >
+
+  <constants>
+    <version major="1" minor="0" />
+    <primary>
+      <primCategory name="primCat">
+        <overview>Can't have a prim without having a primCategory</overview>
+        <prim name="AlMat" value="Al" type="string" uType="mat">
+       Aluminum</prim>
+        <prim name="CarbonMat" value="C" type="string" uType="mat" >Carbon
+        </prim>
+        <prim name="VacMat" value="Vacuum" type="string" uType="mat">Gotta
+ have vacuum</prim>
+      </primCategory>
+    </primary>
+  </constants>
+  <materials version="0.1" date="071101" author="M.Frailis">
+  &Materials;
+  </materials>
+
+
+  <section name="simpleStackSection"
+         version ="1.0" date="2001/10/18" author="J.Bogart"
+         topVolume="simpleStack" >
+
+    <box name="aBox"
+         X="10.0"  Y="20.0" Z="30.0" materialREF="Aluminum" />
+    <box name="bBox"
+         X="7.0"  Y="6.0" Z="4.0" materialREF="Carbon" />
+
+    <stackY name="simpleStack" >
+      <axisMPos volume="aBox" ncopy="5" />
+      <axisPos  volume="bBox" dX="3.0" />
+    </stackY>
+  </section>
+</gdd>

@@ -1,0 +1,170 @@
+<!-- Definition of the materials used by GLAST -->
+<!-- All the density att. are specified in g/cm3 and all aweight in g/mole -->
+
+<element name="Si" 
+	 z="14" 
+	 aweight="28.09" 
+	 density="2.33"
+	 />
+
+<element name="ArgonGas" 
+	 z="18" 
+	 aweight="39.95" 
+	 density="0.001782"
+	 />
+
+<element name="Nitrogen" 
+	 symbol="N"
+	 z="7" 
+	 aweight="14.01" 
+	 />
+
+<element name="Oxygen" 
+	 symbol="O"
+	 z="8" 
+	 aweight="16.00" 
+	 />
+  
+<element name="Carbon" 
+	 symbol="C"
+	 z="6" 
+	 aweight="12.011" 
+	 />
+
+<element name="Hydrogen" 
+	 symbol="H"
+	 z="1" 
+	 aweight="1.008" 
+	 />
+
+<element name="Aluminum" 
+	 symbol="Al"
+	 z="13" 
+	 aweight="26.892" 
+	 />
+
+
+<element name="Pb" 
+	 z="82" 
+	 aweight="207.19" 
+	 density="11.35"
+	 />
+
+<element name="Al" 
+	 z="13" 
+	 aweight="26.98" 
+	 density="2.700"
+	 />
+
+
+<element name="Al20" 
+	 z="13" 
+	 aweight="26.98" 
+	 density="0.54040"
+	 />
+
+<element name="Al50" 
+	 z="13" 
+	 aweight="26.98" 
+	 density="1.3520"
+	 />
+
+<element name="C" 
+	 z="6" 
+	 aweight="12.01" 
+	 density="2.265"
+	 />
+
+<element name="W" 
+	 z="74" 
+	 aweight="183.84" 
+	 density="19.3"
+	 />
+
+<element name="Cesium" 
+	 symbol="Cs"
+	 z="55" 
+	 aweight="132.90545" 
+	 />
+
+<element name="Iodine" 
+	 symbol="I"
+	 z="53" 
+	 aweight="126.90447" 
+	 />
+
+
+<element name="Vacuum" 
+	 z="0" 
+	 aweight="0" 
+	 density="0.0"
+	 />
+
+<!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
+<element name="CarbonFiber" 
+	 z="0" 
+	 aweight="0" 
+	 density="0.0"
+	 />
+<!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
+<element name="Fiberglass" 
+	 z="0" 
+	 aweight="0" 
+	 density="0.0"
+	 />
+
+<!-- ATTENTION .. THIS MATERIAL MUST BE SPECIFIED -->
+<element name="someStuff" 
+	 z="0" 
+	 aweight="0" 
+	 density="0.0"
+	 />
+
+<composite name="rubber60A1" density = "1.64">
+<addmaterial material="Carbon">
+<natoms n="1" />
+</addmaterial>
+<addmaterial material ="Hydrogen">
+<natoms n="1" />
+</addmaterial>
+<addmaterial material ="Aluminum">
+<natoms n="1" />
+</addmaterial>
+</composite>
+
+<composite name="Polystyrene" density = "1.0320">
+<addmaterial material="Carbon">
+<natoms n="1" />
+</addmaterial>
+<addmaterial material ="Hydrogen">
+<natoms n="1" />
+</addmaterial>
+</composite>
+
+<composite name="FOAM05" density = "0.050">
+<addmaterial material="Carbon">
+<natoms n="1" />
+</addmaterial>
+<addmaterial material ="Hydrogen">
+<natoms n="1" />
+</addmaterial>
+</composite>
+
+<composite name="Air" density = "1.290">
+<addmaterial material="Nitrogen">
+<fractionmass fraction="0.7" />
+</addmaterial>
+<addmaterial material ="Oxygen">
+<fractionmass fraction="0.3" />
+</addmaterial>
+</composite>
+
+<composite name="CsI" density = "4.53">
+<addmaterial material="Cesium">
+<natoms n="1" />
+</addmaterial>
+<addmaterial material ="Iodine">
+<natoms n="1" />
+</addmaterial>
+</composite>
+
