@@ -1,7 +1,8 @@
 /** @file release.notes 
  *  Package detCheck
  * Coordinator:  J. Bogart
-
+      EOH
+ * 10-nov-2004:jrb v1r3    For Xerces 2.6.0
  * 21-oct-2004:jrb v1r2p6  Really do it this time
  * 21-oct-2004:jrb v1r2p5  Add version line to requirements
  * 21-oct-2004:jrb v1r2p4  Minor changes to standardRun.txt
