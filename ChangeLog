@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Wed Nov 10 11:44:18 PST 2004
+detCheck/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+Use  Xerces 2.6.0-compatible  version of xmlUtil (v3r0)
+
+    *
+------------------------------------------------------------
 User: jrb  Thu Oct 21 11:28:36 PDT 2004
 detCheck/doc
 
