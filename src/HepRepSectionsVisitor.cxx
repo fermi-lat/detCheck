@@ -133,8 +133,6 @@ void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
               <<  t.y() << ", " 
               <<  t.z() << ")\" showlabel =\"\"/>" << std::endl;      
         }
-
-      m_types.push_back(ensemble->getName());
     }
   else
     {
@@ -142,8 +140,8 @@ void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
       out << "<attvalue name=\"ID\" value =\""<< m_actualID.name() << "\" showlabel =\"\"/>" << std::endl;
       
       xmlUtil::Identifier identifier;
-      for(unsigned int v=0;v<m_actualID.size();v++)
-          identifier.append(m_actualID[v]);
+      for(int ii=0;ii<m_actualID.size();ii++)
+          identifier.append(m_actualID[ii]);
 
       out << "<attvalue name=\"IDname\" value =\""<< m_idDictionary->getNameSeqString(identifier) << "\" showlabel =\"\"/>" << std::endl;      
 
@@ -158,16 +156,20 @@ void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
   
   /// Here the positioned volumes are visited
   pos p = ensemble->getPositions();
+  std::vector<std::string> types;
   for(i=p.begin(); i!=p.end();i++)
     if(m_mode == "instance")
       (*i)->AcceptNotRec(this);
     else
       {
-        std::string name = (*i)->getVolume()->getName();
-        std::vector<std::string>::iterator j;
-        j = std::find(m_types.begin(), m_types.end(),name);
-        if (j ==m_types.end())
-          (*i)->AcceptNotRec(this);          
+          std::string name = (*i)->getVolume()->getName();
+          std::vector<std::string>::iterator j;
+          j = std::find(types.begin(), types.end(),name);
+          if (j ==types.end())
+              {
+                  (*i)->AcceptNotRec(this);          
+                  types.push_back(name);   
+              }
       }
 
   if (m_mode == "type")
@@ -218,8 +220,8 @@ void  HepRepSectionsVisitor::visitBox(Box* box)
       out << "<instance type=\"" << box->getName() << "\">" << std::endl;
       out << "<attvalue name=\"ID\" value =\""<< m_actualID.name() << "\" showlabel =\"\"/>" << std::endl;
       xmlUtil::Identifier identifier;
-      for(unsigned int v=0;v<m_actualID.size();v++)
-          identifier.append(m_actualID[v]);
+      for(int ii=0;ii<m_actualID.size();ii++)
+          identifier.append(m_actualID[ii]);
 
       out << "<attvalue name=\"IDname\" value =\""<< m_idDictionary->getNameSeqString(identifier) << "\" showlabel =\"\"/>" << std::endl;      
       out << "<attvalue name=\"Color\" value =\"(" <<
@@ -288,7 +290,7 @@ void  HepRepSectionsVisitor::visitPosXYZ(PosXYZ* pos)
   Hep3Vector t(pos->getX(), pos->getY(), pos->getZ());  
   HepTransform3D tr(rot,t);
   HepTransform3D atr = (m_actualTransform.back())*tr;
-  int i;
+  unsigned int i;
 
   idents::VolumeIdentifier tempID = m_actualID;
 
@@ -306,8 +308,8 @@ void  HepRepSectionsVisitor::visitPosXYZ(PosXYZ* pos)
 
 void  HepRepSectionsVisitor::visitAxisMPos(AxisMPos* pos)
 {
-  int i,j ;
-  int n;
+  unsigned int i,j ;
+  unsigned int n;
   idents::VolumeIdentifier tempID = m_actualID;
   HepTransform3D atr;
 
@@ -353,6 +355,8 @@ void  HepRepSectionsVisitor::visitAxisMPos(AxisMPos* pos)
               m_actualID.append((int)(pos->getIdFields()[j]->getValue())+
                                 (int)(pos->getIdFields()[j]->getStep()*i));
             }
+
+
 
         m_actualTransform.push_back(atr);
         pos->getVolume()->AcceptNotRec(this);
