@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Tue Jan 15 15:14:42 PST 2002
+detCheck/src
+
+Removed Files:
+	OverlapMain.cxx 
+Log Message:
+Get rid of misnamed file that slipped in by mistake
+
+    *
+------------------------------------------------------------
 User: jrb  Tue Jan 15 15:14:25 PST 2002
 detCheck/detCheck
 
