@@ -1,6 +1,8 @@
 /** @file release.notes
  *  Package detCheck
- * Coordiantor:  J. Bogart
+ * Coordinator:  J. Bogart
+ * 27-jan-2003: jrb - tag v1r1  Includes 7-month-old app. to generate 
+           hmtl constants file, heretofore untagged
  * 10-may-2002: jrb - tag v1r0p1  
  *         1. Wildcards in use statements
  *         2. add dependence on xmlGeoDbs
