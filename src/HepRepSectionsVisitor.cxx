@@ -116,9 +116,7 @@ void  HepRepSectionsVisitor::visitSection(Section* section)
     /// Now for the Instance Tree
     out << "<instancetree name=\"detModel\" version=\"1.0\" reqtypetree=\"\" typetreename=\"detModel\" typetreeversion=\"1.0\"> " << std::endl;
     setMode("instance");
-    m_actualName.push_back(vol->getName());
     vol->AcceptNotRec(this);
-    m_actualName.pop_back();
     out << "</instancetree>" << std::endl;
     
     // Lets close the HepRep
@@ -127,6 +125,8 @@ void  HepRepSectionsVisitor::visitSection(Section* section)
 
 void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
 {
+  m_actualName.push_back(ensemble->getName());
+
   std::vector <Position*>::iterator i;
   typedef std::vector<Position*> pos;
   
@@ -170,9 +170,7 @@ void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
   for(i=p.begin(); i!=p.end();i++)
     if(m_mode == "instance")
     {
-      m_actualName.push_back(((*i)->getVolume())->getName());
       (*i)->AcceptNotRec(this);
-      m_actualName.pop_back();     
     }
     else
       {
@@ -195,6 +193,8 @@ void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
       out << "</instance>" << std::endl;
     }
 
+    m_actualName.pop_back();
+  
   /*      
   /// Here the envelope is visited if the ensamble is a composition
   if (Composition* comp = dynamic_cast<Composition*>(ensemble))
@@ -209,6 +209,8 @@ void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
 
 void  HepRepSectionsVisitor::visitBox(Box* box)
 {
+  m_actualName.push_back(box->getName());
+
   typedef std::map<std::string, Color*> M;
   M::const_iterator j; 
 
@@ -283,6 +285,8 @@ void  HepRepSectionsVisitor::visitBox(Box* box)
 
       out << "</instance>" << std::endl;
    }
+
+      m_actualName.pop_back();
 
 
   /*  
