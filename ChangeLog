@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: jrb  Fri Jun 27 10:04:18 PDT 2003
+detCheck/src
+
+Modified Files:
+	Overlaps.cxx overlapsMain.cxx 
+Log Message:
+Implement option to dump box dimensions and relative positions even if
+geometry is ok (no overlaps)
+
+    *
+------------------------------------------------------------
 User: jrb  Fri Jun 27 10:03:56 PDT 2003
 detCheck/detCheck
 
