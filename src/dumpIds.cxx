@@ -5,6 +5,7 @@
 #include <fstream>
 #include <list>
 #include <vector>
+#include <cmath>
 
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/IDmapBuilder.h"
@@ -36,10 +37,10 @@ int main(int argc, char* argv[]) {
   // We need the XML flight as input to the test executable
   if (argc == 1) {
     std::cout << "Invoke as follows: " << std::endl;
-    std::cout << "    ./dumpIds.exe myDetector.xml [myTopVolume] " 
+    std::cout << "    ./dumpIds.exe infileSpec [outfileSpec [myTopVolume]] " 
               << std::endl;
 
-    std::cout << "Creates the file dumpIds.txt in default directory" 
+    std::cout << "Default creates the file dumpIds.txt in default directory" 
               << std::endl;
     return 0;
   }
@@ -62,9 +63,11 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
+  std::string outfile("dumpIds.txt");
+  if (argc > 2) outfile = std::string(argv[2]);
 
   std::string volName("");
-  if (argc > 2) volName = std::string(argv[2]);
+  if (argc > 3) volName = std::string(argv[3]);
 
   // We retrieve the hierarchy entry point, i.e. the GDD object. It
   // contains all the relevant information
@@ -85,7 +88,7 @@ int main(int argc, char* argv[]) {
 
   // Open output file
   std::ofstream out;
-  out.open("dumpIds.txt");
+  out.open(outfile.c_str());
 
   const IDmapBuilder::IdVector* idVectors = idMap.getIdVector();
   
@@ -104,13 +107,24 @@ int main(int argc, char* argv[]) {
       idMap.getPositionedVolumeByID(volIdent);
 
     Hep3Vector trans = pPosVol->getTranslation();
-    out << "centered at (" << trans.getX() << ", " << trans.getY() << ", " ;
-    out << trans.getZ() << ")" ;
-    out << " with X,Y,Z dim: " ;
+    HepRotation rot=pPosVol->getRotation();
+    double phi = rot.getPhi();
+    double theta = rot.getTheta();
+    bool isRot = (fabs(phi) + fabs(theta)) > .001;
+    out << "center: (" << trans.getX() << ", " << trans.getY() << ", " ;
+    out << trans.getZ() << ") " ;
+    if (isRot) out << "(unrotated) ";
+    out << "X,Y,Z dim: " ;
     detModel::BoundingBox* pBox = pPosVol->getVolume()->getBBox();
-    out << pBox->getXDim() << ", " << pBox->getYDim() << ", " ;
-    out << pBox->getZDim() << std::endl << std::endl;
 
+    out << pBox->getXDim() << ", " << pBox->getYDim() << ", " ;
+    out << pBox->getZDim()  << std::endl;
+
+    if (isRot) {
+    out << " and rotation angles theta=" << theta << " phi=" << phi 
+        << std::endl << std::endl;
+    }
+    else out << std::endl;
   }
 
   delete manager;
