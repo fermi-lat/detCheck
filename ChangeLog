@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Tue Oct  7 07:00:58 PDT 2003
+detCheck/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+Add another diagnostic.  This one dumps ids of all sensitive volumes.
+
+    *
+------------------------------------------------------------
 User: riccardo  Mon Oct  6 07:59:34 PDT 2003
 detCheck/src
 
