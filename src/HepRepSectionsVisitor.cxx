@@ -140,6 +140,7 @@ void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
       out << "<attvalue name=\"ID\" value =\""<< m_actualID.name() << "\" showlabel =\"\"/>" << std::endl;
       
       xmlUtil::Identifier identifier;
+      
       for(int ii=0;ii<m_actualID.size();ii++)
           identifier.append(m_actualID[ii]);
 
@@ -210,6 +211,11 @@ void  HepRepSectionsVisitor::visitBox(Box* box)
           <<  box->getX() << ", " 
           <<  box->getY() << ", " 
           <<  box->getZ() << ")\" showlabel =\"\"/>" << std::endl;
+
+      out << "<attvalue name=\"Color\" value =\"" <<
+        j->second->getRed() << "," <<
+        j->second->getGreen() << "," <<
+        j->second->getBlue() << "\" showlabel =\"\"/>" << std::endl;      
       
       out << "<attvalue name=\"Sensitive\" value =\""<< box->getSensitive() << "\" showlabel =\"\"/>" << std::endl;
       out << "</type>" << std::endl;
@@ -224,10 +230,6 @@ void  HepRepSectionsVisitor::visitBox(Box* box)
           identifier.append(m_actualID[ii]);
 
       out << "<attvalue name=\"IDname\" value =\""<< m_idDictionary->getNameSeqString(identifier) << "\" showlabel =\"\"/>" << std::endl;      
-      out << "<attvalue name=\"Color\" value =\"(" <<
-        j->second->getRed() << "," <<
-        j->second->getGreen() << "," <<
-        j->second->getBlue() << ")\" showlabel =\"\"/>" << std::endl;      
       HepPoint3D v(0,0,0);
       HepPoint3D v1;
       double dx = box->getX()/2;
