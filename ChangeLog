@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Tue Feb  3 16:01:34 PST 2004
+detCheck/src
+
+Modified Files:
+	SolidStats.cxx 
+Log Message:
+Minor change for Windows compile
+
+    *
+------------------------------------------------------------
 User: jrb  Thu Jan  8 17:43:43 PST 2004
 detCheck/doc
 
