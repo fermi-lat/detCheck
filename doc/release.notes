@@ -1,1 +1,10 @@
-v1  Initial version of detCheck,  J. Bogart, 15 Jan 2002.
+/** @file release.notes
+ *  Package detCheck
+ * Coordiantor:  J. Bogart
+ * 10-may-2002: jrb - tag v1r0p1  
+ *         1. Wildcards in use statements
+ *         2. add dependence on xmlGeoDbs
+ *         3. put this file, release.notes, into proper form
+ * 10-may-2002: jrb - tag v1r0 Make an rtag of standard form
+ * 15-jan-2002: jrb - tag v1   Initial version 
+ */
