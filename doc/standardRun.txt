@@ -1,0 +1,57 @@
+When changes have been committed to xmlGeoDbs
+
+1. $XMLGEODBSROOT should point to HEAD version
+
+2. define an environment variable for destination directory, e.g.
+   setenv outDir /afs/slac/www/exp/glast/ground/software/geometry/data/HEAD
+
+3. make sure that both constsDoc.exe and summary.exe exist in bin directory
+   of detCheck.  Note regular build will not build summary.exe since it
+   only compiles on Linux.  To build summary.exe, from cmt directory issue
+          gmake Linux
+
+4. cd detCheck/rh72_gcc2953
+   (or whatever the binary directory is called)
+
+5. Run constsDoc for both "regular" and CAL-segmented geometries:
+
+  ./constsDoc.exe $XMLGEODBSROOT/xml/flight/flight.xml $outDir/flight-doc.html
+
+  ./constsDoc.exe $XMLGEODBSROOT/xml/flight/flightSegVols.xml     \
+   $outDir/flightSegVols-doc.html
+
+6. Run summary.exe for both geometries.  Also run for segmented with
+   choice = "recon"
+
+   ./summary.exe $XMLGEODBSROOT/xml/flight/flight.xml \
+    $outDir/materialsSummary.html
+
+   ./summary.exe $XMLGEODBSROOT/xml/flight/flightSegVols.xml \
+    $outDir/materialsSummarySeg.html
+
+   ./summary.exe $XMLGEODBSROOT/xml/flight/flightSegVols.xml \
+    $outDir/materialsSummarySegRecon.html LAT recon
+
+
+               ---------------------------------------------
+
+When a new rtag has been made for xmlGeoDbs,
+
+1. $XMLGEODBSROOT should point to the new tagged version
+
+2. Make a new output subdirectory for it.  E.g., if the tag is v3r7p1
+
+   mkdir /afs/slac/www/exp/glast/ground/software/geometry/data/v3r7p1
+
+   and define an environment variable, say outDir, to point to it 
+   as above.
+
+3-6. Execute steps 3-6 as above.
+
+
+7. If output seems satisfactory, make a soft link to the new output directory
+
+     ln -s $outDir $outDir/../RELEASED
+
+   (if need be, get rid of old RELEASED link first)
+
