@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Thu Jan 17 14:08:44 PST 2002
+detCheck/detCheck
+
+Modified Files:
+	SolidStats.h 
+Log Message:
+Sort of done.  Could use versioning information in output.
+
+    *
+------------------------------------------------------------
 User: jrb  Wed Jan 16 21:44:02 PST 2002
 detCheck/src
 
