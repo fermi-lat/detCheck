@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: jrb  Thu May 30 15:44:13 PDT 2002
+detCheck/src
+
+Added Files:
+	constsDocMain.cxx 
+Log Message:
+New little main program which builds html constants description using 
+detModel::HtmlConstantsVisitor
+
+    *
+------------------------------------------------------------
 User: jrb  Thu May 30 15:43:39 PDT 2002
 detCheck/cmt
 
