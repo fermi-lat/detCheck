@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Thu Jan 17 14:08:59 PST 2002
+detCheck/src
+
+Modified Files:
+	SolidStats.cxx solidStatsMain.cxx 
+Log Message:
+Sort of done.  Could use versioning information in output.
+
+    *
+------------------------------------------------------------
 User: jrb  Thu Jan 17 14:08:44 PST 2002
 detCheck/detCheck
 
