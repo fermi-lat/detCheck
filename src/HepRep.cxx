@@ -25,6 +25,7 @@
 #include "detModel/Sections/Box.h"
 #include "detModel/Gdd.h"
 
+#include "xmlUtil/id/IdDict.h"
 
 /* This basic test needs two argument; the xml file to use and the volume 
    name to use as the mother volume (for example oneCAL). If only the filename
@@ -84,7 +85,8 @@ int main(int argc, char* argv[]) {
   // transparency values
   detModel::MatCollection* mats = g->getMaterials();  
   mats->generateColor();
-  
+
+  visitor->setIdDictionary(g->getIdDictionary());  
   // We start the heprep visitor
   manager->startVisitor(visitor);
 

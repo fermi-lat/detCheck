@@ -9,6 +9,10 @@
 
 #include "CLHEP/Geometry/Transform3D.h"
 
+namespace xmlUtil{
+  class IdDict;
+}
+
 namespace detModel{
 
   class Gdd;
@@ -83,6 +87,7 @@ namespace detModel{
 
     void setPrefixTransform(HepTransform3D t){m_prefixTransform = t;};
 
+    void setIdDictionary(xmlUtil::IdDict* id){m_idDictionary = id;};
   private:
     std::string actualVolume;
     std::ofstream out;
@@ -95,8 +100,9 @@ namespace detModel{
     
     /// This is the identifiers used during the m_volMap building
       idents::VolumeIdentifier m_actualID;    
-   idents::VolumeIdentifier m_idPrefix;    
+      idents::VolumeIdentifier m_idPrefix;    
       
+      xmlUtil::IdDict* m_idDictionary;
       /// This map holds the colors for the material
         std::map <std::string, Color*> colorsMap;
     Gdd* m_gdd;
