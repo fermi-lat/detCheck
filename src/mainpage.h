@@ -53,7 +53,7 @@ If the output file name is not specified but topVolume is, the output will
 be named after it, e.g. LAT.heprep for topVolume LAT.</p>
 
 <pre>
-   <b>dumpIds.exe</b> aPath/myGeoInput.xml
+   <b>dumpIds.exe</b> aPath/myGeoInput.xml  [anotherPath/output.txt]
 </pre>
 <p>See sample output from constsDoc.exe, summary.exe and dumpIds.exe at
 <a href="http://www.slac.stanford.edu/exp/glast/ground/software/geometry/data/RELEASED/">http://www.slac.stanford.edu/exp/glast/ground/software/geometry/data/RELEASED/</a></p>
