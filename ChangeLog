@@ -1,0 +1,50 @@
+------------------------------------------------------------
+User: jrb  Tue Jan 15 14:25:03 PST 2002
+detCheck
+
+Log Message:
+First import of possibly-temporary package
+
+Status:
+
+Vendor Tag:	GLAST
+Release Tags:	v1
+		
+N detCheck/.cvsignore
+I detCheck/Visual
+I detCheck/.cvsignore~
+I detCheck/i386_linux22
+I detCheck/cmt/Makefile
+I detCheck/cmt/NMake
+I detCheck/cmt/requirements~
+N detCheck/cmt/.cvsignore
+I detCheck/cmt/setup.csh
+I detCheck/cmt/setup.sh
+I detCheck/cmt/cleanup.csh
+I detCheck/cmt/cleanup.sh
+I detCheck/cmt/.cvsignore~
+I detCheck/cmt/cmt_path.make
+N detCheck/cmt/requirements
+I detCheck/cmt/constituents.make
+I detCheck/cmt/setup.make
+I detCheck/cmt/i386_linux22.make
+N detCheck/src/OverlapMain.cxx
+N detCheck/src/mainpage.h
+N detCheck/src/Overlaps.cxx
+N detCheck/src/overlapsMain.cxx
+N detCheck/src/SolidStats.cxx
+N detCheck/src/solidStatsMain.cxx
+N detCheck/detCheck/Overlaps.h
+N detCheck/detCheck/OverLaps.h
+N detCheck/detCheck/SolidStats.h
+N detCheck/doc/checkOverlap.txt
+I detCheck/doc/design.txt~
+N detCheck/doc/release.notes
+N detCheck/xml/simpleComposition.xml
+N detCheck/xml/simpleStack.xml
+N detCheck/xml/materials.xml
+N detCheck/xml/test-overlap.xml
+
+No conflicts created by this import
+
+    *
