@@ -1,5 +1,15 @@
 ------------------------------------------------------------
 User: jrb  Wed Jan 16 17:47:38 PST 2002
+detCheck/src
+
+Modified Files:
+	SolidStats.cxx solidStatsMain.cxx 
+Log Message:
+Probably still not quite right, but close
+
+    *
+------------------------------------------------------------
+User: jrb  Wed Jan 16 17:47:38 PST 2002
 detCheck/detCheck
 
 Modified Files:
