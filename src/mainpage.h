@@ -1,6 +1,6 @@
 // Mainpage for doxygen
 
-/*! \mainpage package detCheck
+/** @mainpage package detCheck
 <p>
 This package provides tools for examining and validating a detModel geometry
 description.  Each tool is implemented as a c++ class and a standalone

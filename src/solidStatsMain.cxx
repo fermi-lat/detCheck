@@ -1,4 +1,4 @@
-
+//      $Header$  
 #include <string>
 #include <iostream>
 #include <vector>
@@ -6,13 +6,17 @@
 #include "detModel/Management/XercesBuilder.h"
 #include "detCheck/SolidStats.h"
 
-/// Stand-alone program which invokes the SolidStats sections visitor 
-/// to produce statistics on solids by material
-/// Arguments (with their [defaults]) are
-///     xml file to be parsed              [../xml/test-solidStats.xml]
-///     file for output                    [std::cout]
-///     top volume name                    ["*", i.e., top volume of section]
-///     <choice> mode                      ["propagate"]
+/** 
+    @file solidStatsMain.cxx
+
+    Stand-alone program which invokes the SolidStats sections visitor 
+    to produce statistics on solids by material
+    Arguments (with their [defaults]) are
+      @a @b file  xml file to be parsed    [../xml/test-solidStats.xml]
+      @a @b outfile  file for output       [std::cout]
+      @a @b vol     top volume name        ["", i.e., top volume of section]
+      @a @b mode     <choice> mode         ["propagate"]
+*/
 int main(int argc, char* argv[]) {
 
   char* inFile = "../xml/test-solidStats.xml";
@@ -52,7 +56,9 @@ int main(int argc, char* argv[]) {
   detCheck::SolidStats* sStats = 
     new detCheck::SolidStats(std::string(topVolume));
 
-  sStats->setDiagnostic("diag.txt");
+  // Uncomment the line below for the gory details of traversal
+  //  sStats->setDiagnostic("diag.txt");
+
   // Traverse detModel and build up our own data structures
   manager->startVisitor(sStats);
 
