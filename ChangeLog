@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: jrb  Thu May 30 15:43:39 PDT 2002
+detCheck/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+Add new application to build html constants description using 
+detModel::HtmlConstantsVisitor
+
+    *
+------------------------------------------------------------
 User: jrb  Fri May 10 15:20:38 PDT 2002
 detCheck/doc
 
