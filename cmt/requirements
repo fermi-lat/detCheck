@@ -1,8 +1,11 @@
 package detCheck
-# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/cmt/requirements,v 1.5 2003/10/07 14:00:58 jrb Exp $
+# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/cmt/requirements,v 1.6 2003/11/21 20:24:05 jrb Exp $
 
 use detModel v2r*
 use xmlGeoDbs v1r*
+use CLHEP v2r* IExternal
+use xmlUtil v2r*
+use idents  v2r*
 
 include_dirs "${DETCHECKROOT}"
 
