@@ -1,4 +1,19 @@
 ------------------------------------------------------------
+User: jrb  Fri Mar 19 11:06:32 PST 2004
+detCheck/src
+
+Modified Files:
+	HepRep.cxx Overlaps.cxx SolidStats.cxx constsDocMain.cxx 
+	dumpIds.cxx overlapsMain.cxx solidStatsMain.cxx 
+Log Message:
+Overlaps.cxx:  adjust check for overlaps so that two values within epsilon
+               of 0 always pass
+SolidStats.cxx: get rid of some compile warnings
+HepRep.cxx,constsDocMain.cxx,dumpIds.cxx,overlapsMain.cxx,solidStatsMain.cxx:
+   check that parse succeeded; if not, exit immediately with message
+
+    *
+------------------------------------------------------------
 User: jrb  Tue Feb  3 16:01:34 PST 2004
 detCheck/src
 
