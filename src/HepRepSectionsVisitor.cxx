@@ -37,8 +37,6 @@ HepRepSectionsVisitor::HepRepSectionsVisitor(std::string nvol)
 
   setRecursive(0);
   actualVolume = nvol;
-  
-  out.open("sections.heprep");
 
   //  Manager* manager = Manager::getPointer();
   //  Gdd* g = manager->getGdd();
@@ -58,6 +56,15 @@ void HepRepSectionsVisitor::visitGdd(Gdd* gdd)
 {
   typedef std::vector<Section*>sec;
   std::vector <Section*>::iterator i;
+
+  if (m_outputFile.size() == 0) {
+    if (actualVolume.size() == 0 ) {
+      m_outputFile = "sections.heprep";
+    }
+    else m_outputFile = actualVolume + ".heprep";
+  }
+  out.open(m_outputFile.c_str());
+
   m_actualID = m_idPrefix;
   m_gdd = gdd;
   colorsMap = gdd->getMaterials()->getMaterialColors();
@@ -287,8 +294,16 @@ void  HepRepSectionsVisitor::visitBox(Box* box)
 
 void  HepRepSectionsVisitor::visitPosXYZ(PosXYZ* pos)
 {
-  HepRotation rot(pos->getXRot()*M_PI/180, pos->getYRot()*M_PI/180, 
-                  pos->getZRot()*M_PI/180);
+
+  // NOTE:  If the rotation has a non-zero value for more than
+  //        one component, this probably doesn't do the right
+  //        thing.  Chances are some work has to be done to
+  //        force the components to be composed in the 
+  //        opposite order.
+  //  HepRotation rot(pos->getXRot()*M_PI/180, pos->getYRot()*M_PI/180, 
+  //                  pos->getZRot()*M_PI/180);
+  HepRotation rot(-pos->getXRot()*M_PI/180, -pos->getYRot()*M_PI/180, 
+                  -pos->getZRot()*M_PI/180);
   Hep3Vector t(pos->getX(), pos->getY(), pos->getZ());  
   HepTransform3D tr(rot,t);
   HepTransform3D atr = (m_actualTransform.back())*tr;
@@ -327,7 +342,8 @@ void  HepRepSectionsVisitor::visitAxisMPos(AxisMPos* pos)
         switch(pos->getAxisDir()){
         case (Stack::xDir):
           {
-            HepRotation rot(pos->getRotation()*M_PI/180, 0, 0);
+            //            HepRotation rot(pos->getRotation()*M_PI/180, 0, 0);
+            HepRotation rot(-pos->getRotation()*M_PI/180, 0, 0);
             Hep3Vector t(pos->getDx()+pos->getDisp(i), pos->getDy(), pos->getDz());  
             HepTransform3D tr(rot,t);
             atr = (m_actualTransform.back())*tr;
@@ -335,7 +351,8 @@ void  HepRepSectionsVisitor::visitAxisMPos(AxisMPos* pos)
           break;
         case (Stack::yDir):
           {
-            HepRotation rot(0,pos->getRotation()*M_PI/180, 0);
+            //            HepRotation rot(0,pos->getRotation()*M_PI/180, 0);
+            HepRotation rot(0,-pos->getRotation()*M_PI/180, 0);
             Hep3Vector t(pos->getDx(), pos->getDy()+pos->getDisp(i), pos->getDz());  
             HepTransform3D tr(rot,t);
             atr = (m_actualTransform.back())*tr;
@@ -343,7 +360,8 @@ void  HepRepSectionsVisitor::visitAxisMPos(AxisMPos* pos)
           break;
         case (Stack::zDir):
           {
-            HepRotation rot(0,0,pos->getRotation()*M_PI/180);
+            //            HepRotation rot(0,0,pos->getRotation()*M_PI/180);
+            HepRotation rot(0,0,-pos->getRotation()*M_PI/180);
             Hep3Vector t(pos->getDx(), pos->getDy(), pos->getDz()+pos->getDisp(i));  
             HepTransform3D tr(rot,t);
             atr = (m_actualTransform.back())*tr;

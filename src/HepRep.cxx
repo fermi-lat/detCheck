@@ -27,22 +27,30 @@
 
 #include "xmlUtil/id/IdDict.h"
 
-/* This basic test needs two argument; the xml file to use and the volume 
-   name to use as the mother volume (for example oneCAL). If only the filename
+/* This basic test takes three arguments; the xml file to use, the volume 
+   name to use as the mother volume (for example oneCAL), and the
+   output filename. If only the input filename
    is specified, the topVolume specified in the section is used as the mother
-   volume.
+   volume.  If the third argument is not specified, the file will
+   be named "sections.heprep"
 
    Ex.
-   ./test.exe ../../../xmlUtil/v2r1/xml/flight.xml oneTKR
+   ./heprep.exe ../../../xmlUtil/v2r1/xml/flight.xml oneTKR
    
-   The test program produce a sections.wrl file with the HEPREP representation 
+   The test program produce a file with the HEPREP representation.
    of the geometry (be careful, if you have a big geometry the file can be
-   huge).
+   huge).  The file will be called oneTKR.heprep.
+
 */
 int main(int argc, char* argv[]) {
 
   // We need the XML flight as input to the test executable
-  if (argc == 1) return 0;
+  if (argc == 1) {
+    std::cout << "Call heprep.exe as follows:" << std::endl;
+    std::cout << "./heprep.exe myGeometry.xml [topvolume [[output-file] ] "
+             <<std::endl;
+    return 0;
+  }
 
   // We retrive the manager pointer (it is a singleton, so it is not possible
   // to create it in the usual way)
@@ -59,7 +67,7 @@ int main(int argc, char* argv[]) {
   // the sections and the materials
   manager->build(detModel::Manager::all);
 
-  // We start the VRMLSectionsVisitor to build the vrml file
+  // We start the HepRepSectionsVisitor to build the heprep file
   // If we don't specify a string in the constructor, it will build the
   // vrml file for all the volumes placed in the topVolume, otherwise it
   // will build the vrml file for the specified volume. The output is
@@ -77,6 +85,10 @@ int main(int argc, char* argv[]) {
   visitor->setPrefixTransform(idMap.getTransform3DPrefix());
 
   visitor->setMode("digi");
+
+  // Pass in output file name if specified
+  if (argc > 3) visitor->setOutputFile(argv[3]);
+
   // We retrieve the hierarchy entry point, i.e. the GDD object. It
   // contains all the relevant information
   detModel::Gdd* g = manager->getGdd();
