@@ -28,7 +28,11 @@ int main(int argc, char* argv[]) {
   manager->setNameFile(inFile);
   
   // We build the hierarchy.  All we need are constants.
-  manager->build(detModel::Manager::constants);
+  if (!manager->build(detModel::Manager::constants)) {
+    std::cerr << "Unable to build geometry" << std::endl;
+    return -1;
+  }
+
 
   detModel::HtmlConstantsVisitor* vis = 
     new detModel::HtmlConstantsVisitor(std::string(outFile));

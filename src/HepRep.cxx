@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     return 0;
   }
 
-  // We retrive the manager pointer (it is a singleton, so it is not possible
+  // We retrieve the manager pointer (it is a singleton, so it is not possible
   // to create it in the usual way)
   detModel::Manager* manager = detModel::Manager::getPointer();
 
@@ -65,7 +65,11 @@ int main(int argc, char* argv[]) {
 
   // We build the hierarchy; in that case we build all, i.e. both the constants
   // the sections and the materials
-  manager->build(detModel::Manager::all);
+  if (!manager->build(detModel::Manager::all)) {
+    std::cerr << "Unable to build geometry" << std::endl;
+    return -1;
+  }
+
 
   // We start the HepRepSectionsVisitor to build the heprep file
   // If we don't specify a string in the constructor, it will build the
