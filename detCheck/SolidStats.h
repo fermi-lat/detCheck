@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/SolidStats.h,v 1.3 2002/01/16 01:07:55 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/SolidStats.h,v 1.4 2002/01/17 01:47:37 jrb Exp $
 
 #include <string>
 #include <iostream>
@@ -33,14 +33,11 @@ namespace detCheck {
     virtual ~SolidStats();
 
     /** Produce summary report on constitution of the geometry
-        @arg  @b ofile    Output file for report. If empty, standard
-                          output will be used
-        @arg  @b verbose  If false output is per material only; if
-                          true some per-logical-volume information
-                          is output as well
-        @arg  @b html     If true produce output as web page
+        @arg  @b ofile    Output file for report. If empty, a simple
+                          table will be output to standard output.
+                          If non-empty, the output will be in html.
     */
-    void report(std::string ofile, bool verbose = false, bool hmtl = false);
+    void report(std::string ofile);
 
     /** Provide diagnostic output
         @arg @b filename  File to which output is written, or standard

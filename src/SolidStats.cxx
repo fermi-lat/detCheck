@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.5 2002/01/17 02:12:27 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.6 2002/01/17 05:44:02 jrb Exp $
 
 #include <cmath>
 #include <cassert>
@@ -50,15 +50,17 @@ namespace detCheck {
 
   }
 
-  void SolidStats::report(std::string outfileName, bool verbose, bool html) {
-    m_verbose = verbose;
+  void SolidStats::report(std::string outfileName) {
+    bool html = false;
     bool allocStream = false;
+
     if (outfileName.size() == 0) {
       m_out = &std::cout;  // or out = new ostream(std::out);  ?
     }
     else {
       m_out = new std::ofstream(outfileName.c_str());
       allocStream = true;
+      html = true;
     }
 
     // Here is where all the work goes to output the information saved
@@ -66,7 +68,8 @@ namespace detCheck {
     if (html) {
       (*m_out) << 
         "<html><head><title>Materials Summary</title></head>" << std::endl;
-      (*m_out) << "<body> <h2>Materials Summary</h2>" << std::endl;
+      (*m_out) << "<body> <h2 align = 'center'>Materials Summary</h2>" 
+               << std::endl;
       (*m_out) << "<table cellpadding='3' border='1'>" << std::endl;
       (*m_out) << "<tr bgcolor='#c0ffc0' align ='left'>";
       (*m_out) << "<th>Material Name</th><th># Log. Vol.</th>";
@@ -97,9 +100,28 @@ namespace detCheck {
       }
     }
 
-    // TO DO: Extra output for verbose will go here
-
-    if (html) {
+    // Extra output for html
+    if (html) { // first close old table, then start new one
+      (*m_out) << "</table><h2 align='center'>Summary by Logical Volume</h2>"
+               << "<table cellpadding='3' border='1'>" 
+               << "<tr bgcolor='#c0ffc0' align='left'>" << std::endl;
+      (*m_out) << "<th>Name</th><th>Volume (cu mm)</th><th>Convex vol</th>"
+               << "<th> # Phys.</th>"
+               << "<th>Total volume</th><th>Material</th></tr>"
+               << std::endl;
+    
+      for (LogVolMapIt logIt = m_logVols.begin(); logIt != m_logVols.end();
+           ++logIt) {
+        LogVol* log = logIt->second;
+        (*m_out) << "<tr><td>" << log->name;
+        if (log->envelope) (*m_out) << "(E)";
+        (*m_out) << "</td><td>" << log->vol << "</td><td>" 
+                 << log->convexVol << "</td><td align='right'>" 
+                 << log->nCopy << "</td><td>" << (log->vol*log->nCopy)
+                 << "</td><td>" << log->matName << "</td></tr>" 
+                 << std::endl;
+      }
+        
       (*m_out) << "</table></body></html>" << std::endl;
     }
       
@@ -169,8 +191,9 @@ namespace detCheck {
 
     // Increment copy count for top volume since it won't be
     // positioned inside anything else
-    LogVol* ourVol = findLogVol(m_top->getName());
-    ++(ourVol->nCopy);
+    // *** I think this was a mistake
+    //    LogVol* ourVol = findLogVol(m_top->getName());
+    /////  ++(ourVol->nCopy);
   }
 
   void SolidStats::visitEnsemble(detModel::Ensemble* ens) {
@@ -335,7 +358,7 @@ namespace detCheck {
       assert(logVol->vol == cuVol);
       //      return true;
     }
-    logVol->nCopy += getCopyCount();
+    if (!logVol->envelope) logVol->nCopy += getCopyCount();
 
     if (m_diag) {
       *m_diag << "   finished processing shape " << shape->getName() 
