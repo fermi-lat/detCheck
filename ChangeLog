@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: riccardo  Fri Jan 14 01:18:55 PST 2005
+detCheck/src
+
+Modified Files:
+	HepRepSectionsVisitor.cxx HepRepSectionsVisitor.h 
+Log Message:
+The HepRep visitor now uses the full qualified name for Instance type in the output; this is now compatible with the last FRED version.
+
+    *
+------------------------------------------------------------
 User: jrb  Wed Nov 10 16:49:00 PST 2004
 detCheck/doc
 
