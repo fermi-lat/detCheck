@@ -1,7 +1,9 @@
 /** @file release.notes
  *  Package detCheck
  * Coordinator:  J. Bogart
- * 27-jun-2003 Correct units (kg --> gm) in console output for 
+ * 10-jul-2003:jrb tag v1r1p3 Update doc; Eliminate spurious error messages
+                              from overlaps checker in dump mode
+ * 27-jun-2003 jrb tag v1r1p2 Correct units (kg --> gm) in console output for 
  *             volume summary diagnositic
  * 27-jun-2003: jrb - tag v1r1p1 Add dump option to overlap diagnostic
  * 19-jun-2003: jrb - tag v1r1p0 Increase DEFAULT_EPSILON to 10**(-5)
