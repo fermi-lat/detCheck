@@ -1,0 +1,94 @@
+Make an application built on detModel which will check
+for overlapping volumes (and preferably print out some
+helpful information if any are found, such as names and
+sizes of overlapping volumes, parent in which they overlap,
+and translations of the overlapping volumes relative to
+their parent).
+
+For the time being we're assuming the only volumes we have
+to deal with are boxes aligned with the axes.  In particular
+
+* all primitive volumes are boxes (==> all envelopes for 
+   compositions are boxes)
+* all rotations are multiples of 90 degrees.
+
+
+At each stage
+  1. check that volumes nominally inside a parent volume
+     really are totally inside
+  2. check that "siblings" don't overlap
+
+
+The way things are done currently, one can just use the bounding box.
+Because of the way Riccardo computes bounding boxes, 1. will always be true
+if we say "inside" means "inside the bounding box".  For now, we should
+check that, for compositions, bounding box == envelope; later Riccardo will
+add this check to detModel.
+
+So we really just have 2 left, which means all we need to do, for every
+collection of siblings, is position them properly and then check pairwise
+that they (that is their, bounding boxes) don't overlap.  Note we never
+have to keep track of more than one level of transformation.
+
+  ------------------------------------------
+
+Recall the content model for <section> as implemented by detModel is
+
+<!ELEMENT section (box | composition | choice |
+                   stackX | stackY | stackX | parameters)>
+
+
+The only ones we need to visit directly are composition and
+the different kinds of stack.  
+
+Set up visitor to be 'recursive'
+
+
+  Section::Accept(..)  recursive
+
+    calls client section visitor
+
+     
+
+    then calls back client visitor for each of the following kinds of
+    child elements of section:
+
+      * box  
+
+      * ensemble (composition or stack)
+
+So need at least visitor methods for section, box, and ensemble
+
+ section visitor might want to do some sort of initialization,
+ like writing something to output
+
+ box visitor has nothing to do, can just return
+
+ Our ensemble visitor could
+ 
+      Get the vector of position children
+      for each one
+          get its bb (just == bb of the volume it positions, after
+                       rotations)
+          get displacements X, Y, Z
+
+          Use these to compute coordinates of corners, relative to
+          the ensemble bounding box
+
+          get volume name 
+
+    Save this information (coordinates) in a temp vector of such things.
+
+    Make pairwise comparison to look for overlap 
+         if find overlap, print out name of ensemble volume,
+                          name and coordinates of overlapping children
+
+
+------------------------------------------------------
+
+Alternatively, (to visitor) just invoke
+
+  getVolumesMap  
+
+and iterate through it.  Ignore boxes; handle ensembles as above.
+

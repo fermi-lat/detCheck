@@ -1,0 +1,47 @@
+<?xml version="1.0"  ?>
+
+<!-- $Header $ -->
+<!--  Simple example file using gdd.dtd, suitable as input to
+    detModel test program test.exe.
+       All volumes are boxes or compositions
+  -->
+
+<!DOCTYPE gdd SYSTEM "/u/ey/jrb/glast/jrbPack/xmlUtil/v2r2/xml/gdd.dtd" >
+
+<gdd CVSid="$Id not yet archived, test version $" DTDversion="2.0"
+     substituted="false" >
+
+  <constants>
+    <version major="1" minor="0" />
+    <primary>
+      <primCategory name="primCat">
+        <overview>Can't have a prim without having a primCategory</overview>
+        <prim name="Aluminum" value="Al" type="string" uType="mat">
+       Aluminum material definition</prim>
+        <prim name="Carbon" value="C" type="string" uType="mat">
+       Carbon material definition</prim>
+        <prim name="VacMat" value="Vacuum" type="string" uType="mat">Gotta
+ have vacuum</prim>
+      </primCategory>
+    </primary>
+  </constants>
+  <section name="simpleStackSection"
+         version ="1.0" date="2001/10/18" author="J.Bogart"
+         topVolume="simpleComposition" >
+
+    <box name="aBox"
+         X="10.0"  Y="20.0" Z="30.0" materialREF="Aluminum" />
+
+    <box name="anotherBox"
+         X="25.0"  Y="15.0" Z="35.0" materialREF="Carbon" />
+
+    <box name="env"
+         X="100.0"  Y="100.0" Z="100.0" materialREF="VacMat" />
+
+    <composition name="simpleComposition" envelope="env" >
+      <posXYZ volume="aBox" X="-30.0" Z="25.0" />
+      <posXYZ volume="aBox" X="-25.0" Z="25.0" />
+      <posXYZ volume="anotherBox"  Z="-20.0" />
+    </composition>
+  </section>
+</gdd>

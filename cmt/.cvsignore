@@ -1,0 +1,5 @@
+cleanup.*
+setup.*
+*.mak*
+Makefile
+NMake

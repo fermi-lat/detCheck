@@ -1,0 +1,19 @@
+package detCheck
+# $Header: $
+use detModel
+
+include_dirs "${DETCHECKROOT}"
+
+apply_pattern package_linkopts
+apply_pattern package_headers
+
+##macro headers "" WIN32 "\
+##   ../detCheck/*.h
+
+library detCheck -no_share ${detCheck_headers} -no_share \
+   Overlaps.cxx SolidStats.cxx
+
+private
+application test overlapsMain.cxx Overlaps.cxx
+
+application summary solidStatsMain.cxx SolidStats.cxx
