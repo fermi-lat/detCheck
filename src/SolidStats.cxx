@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.8 2002/01/18 19:04:56 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.9 2002/01/19 00:36:36 jrb Exp $
 
 #include <cmath>
 #include <cassert>
@@ -125,7 +125,7 @@ namespace detCheck {
                  << "  #Log = " << mat->logCount
                  << "  #Phys = " << mat->physCount 
                  << "  Total volume = " << intVol << " cu cm" 
-                 << "  Mass = " <<  intMass << " kg " << std::endl;
+                 << "  Mass = " <<  intMass << " gm " << std::endl;
       }
     }
 
