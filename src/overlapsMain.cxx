@@ -30,6 +30,8 @@ int main(int argc, char* argv[]) {
 
   bool verbose = (argc > 3);
 
+  bool dump = (argc > 4);
+
   // We retrieve the manager pointer (it is a singleton, so it is not possible
   // to create it in the usual way)
   detModel::Manager* manager = detModel::Manager::getPointer();
@@ -49,7 +51,7 @@ int main(int argc, char* argv[]) {
 
   detCheck::Overlaps* oCheck = new detCheck::Overlaps(gdd);
 
-  bool ok = oCheck->check(std::string(outFile), verbose);
+  bool ok = oCheck->check(std::string(outFile), verbose, dump);
 
   return ok;
 }
