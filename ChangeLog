@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Tue May 11 17:20:24 PDT 2004
+detCheck/doc
+
+Modified Files:
+	standardRun.txt 
+Log Message:
+dumpIds.exe now can take output filename argument; update instructions
+
+    *
+------------------------------------------------------------
 User: jrb  Tue May 11 16:08:02 PDT 2004
 detCheck/src
 
