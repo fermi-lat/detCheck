@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.2 2002/01/15 23:23:15 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.3 2003/05/02 21:17:57 jrb Exp $
 
 #include <fstream>
 #include <cmath>
@@ -18,7 +18,8 @@
 
 namespace detCheck {
 
-  double Overlaps::DEFAULT_EPSILON = 0.000001;
+  //  double Overlaps::DEFAULT_EPSILON = 0.000001;
+  double Overlaps::DEFAULT_EPSILON = 0.00001;
 
   Overlaps::Overlaps(detModel::Gdd* gdd) {
     m_gdd = gdd;
