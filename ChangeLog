@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Wed Jan 16 18:12:27 PST 2002
+detCheck/src
+
+Modified Files:
+	SolidStats.cxx 
+Log Message:
+Fixed bug in computing tube volume
+
+    *
+------------------------------------------------------------
 User: jrb  Wed Jan 16 17:47:38 PST 2002
 detCheck/src
 
