@@ -1,6 +1,7 @@
 /** @file release.notes 
  *  Package detCheck
  * Coordinator:  J. Bogart
+ * 11-may-2004:jrb v1r2p2  Fix compile warnings; improve dumpIds slightly
  * 19-mar-2004:jrb tag v1r2p1 Main programs now check if parse succeeded.
  *                Overlap checker now accepts compares between 2 very
  *                small values
