@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: jrb  Tue May 11 17:21:03 PDT 2004
+detCheck/src
+
+Modified Files:
+	dumpIds.cxx 
+Log Message:
+dumpIds.exe now can take output filename argument.  Enhance output to 
+indicate when volumes are rotated
+
+    *
+------------------------------------------------------------
 User: jrb  Tue May 11 17:20:24 PDT 2004
 detCheck/doc
 
