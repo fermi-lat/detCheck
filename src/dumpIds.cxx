@@ -18,12 +18,14 @@
 #include "detModel/Sections/Box.h"
 #include "detModel/Gdd.h"
 
+#include "xmlUtil/id/IdDict.h"
+
 using detModel::IDmapBuilder;
 
 /* This basic test needs one argument: the xml file to use.
 
    Ex.
-   ./test.exe ../../../xmlUtil/v2r1/xml/flight.xml 
+   ./dumpIds.exe ../../../xmlGeoDbs/v2r1/xml/flight/flight.xml 
    
    The test program produces an ascii file with one line per sensitive volume,
    with its id
@@ -32,7 +34,15 @@ using detModel::IDmapBuilder;
 int main(int argc, char* argv[]) {
 
   // We need the XML flight as input to the test executable
-  if (argc == 1) return 0;
+  if (argc == 1) {
+    std::cout << "Invoke as follows: " << std::endl;
+    std::cout << "    ./dumpIds.exe myDetector.xml [myTopVolume] " 
+              << std::endl;
+
+    std::cout << "Creates the file dumpIds.txt in default directory" 
+              << std::endl;
+    return 0;
+  }
 
   // We retrive the manager pointer (it is a singleton, so it is not possible
   // to create it in the usual way)
@@ -67,17 +77,36 @@ int main(int argc, char* argv[]) {
 
   std::cout << "Now for id list: " << std::endl;
 
+  xmlUtil::IdDict* pDict = g->getIdDictionary();
+
   // Open output file
   std::ofstream out;
   out.open("dumpIds.txt");
 
   const IDmapBuilder::IdVector* idVectors = idMap.getIdVector();
-  //  const std::vector<idents::VolumeIdentifier> * idVectors = idMap.getIdVector();
   
-
-  int iVec = 0;
+  unsigned int iVec = 0;
   for  (iVec = 0; iVec < (idVectors->size()); iVec++) {
-    out << ((*idVectors)[iVec]).name() << std::endl;
+    idents::VolumeIdentifier volIdent = (*idVectors)[iVec];
+    out << ((*idVectors)[iVec]).name() << "  " << std::endl;
+
+    xmlUtil::Identifier identifier;
+    unsigned iField;
+    for (iField = 0; iField < volIdent.size(); iField++) {
+      identifier.append(volIdent[iField]);
+    }
+    out << *(pDict->getNamedId(identifier)) << "  " << std::endl;    
+    const detModel::PositionedVolume* pPosVol = 
+      idMap.getPositionedVolumeByID(volIdent);
+
+    Hep3Vector trans = pPosVol->getTranslation();
+    out << "centered at (" << trans.getX() << ", " << trans.getY() << ", " ;
+    out << trans.getZ() << ")" ;
+    out << " with X,Y,Z dim: " ;
+    detModel::BoundingBox* pBox = pPosVol->getVolume()->getBBox();
+    out << pBox->getXDim() << ", " << pBox->getYDim() << ", " ;
+    out << pBox->getZDim() << std::endl << std::endl;
+
   }
 
   delete manager;
