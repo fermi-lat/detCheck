@@ -1,6 +1,8 @@
 package detCheck
-# $Header: $
-use detModel
+# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/cmt/requirements,v 1.1.1.1 2002/01/15 22:25:01 jrb Exp $
+
+use detModel v2r*
+use xmlGeoDbs v1r*
 
 include_dirs "${DETCHECKROOT}"
 
@@ -16,4 +18,12 @@ library detCheck -no_share ${detCheck_headers} -no_share \
 private
 application test overlapsMain.cxx Overlaps.cxx
 
-application summary solidStatsMain.cxx SolidStats.cxx
+# Only can build this app on Linux (doesn't compile on Windows).
+# Fortunately, don't *need* to build it anywhere else.
+# The usual gmake command will not build it.  One has to
+# say
+#     $ gmake Linux
+application summary -group=Linux solidStatsMain.cxx SolidStats.cxx 
+
+
+
