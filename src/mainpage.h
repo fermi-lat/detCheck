@@ -8,7 +8,7 @@ program which invokes it. Other applications linking to the library may also
 use the classes.  The entire package may someday become a subpackage 
 of detModel.</p>
 <p>
-To date three functions are provided:</p>
+To date five functions are provided:</p>
 <ul>
  <li>Overlap checking, executable test.exe.
   See the class Overlaps and main program 
@@ -25,6 +25,13 @@ See the class SolidStats and main
 program solidStatsMain.cxx.  It outputs
 numbers of volumes made of each material, total cubic volume of each
 material, and so forth.</li>
+ <li>Creation of heprep file from xml desscription, suitable
+as input for <a href="http://www.fisica.uniud.it/~riccardo/research/fred/">
+FRED</a>
+ </li>
+ <li>Dump of geometry information (centroid position; X,Y,Z dimensions)
+for all active elements, executable dumpIds.exe
+ </li>
 </ul>
 <p>These programs are invoked as follows (optional arguments are in
 [square brackets])</p>
@@ -37,8 +44,18 @@ but if present (any string) they are true.</p>
    <b>constsDoc.exe</b> aPath/myGeoInput.xml anotherPath/myGeoOutput.html
 
    <b>summary.exe</b> aPath/myGeoInput.xml  anotherPath/mySummary.html [topVolume  [choice-mode] ]
+
+   <b>heprep.exe</b> aPath/myGeoInput.xml [topVolume [outputFilename] ]
 </pre>
-<p>See sample output from the last two programs at 
+<p>If neither of the optional arguments is specified, the topVolume specified
+in the xml file will be used and the output filename will be sections.heprep.
+If the output file name is not specified but topVolume is, the output will
+be named after it, e.g. LAT.heprep for topVolume LAT.</p>
+
+<pre>
+   <b>dumpIds.exe</b> aPath/myGeoInput.xml
+</pre>
+<p>See sample output from constsDoc.exe, summary.exe and dumpIds.exe at
 <a href="http://www.slac.stanford.edu/exp/glast/ground/software/geometry/data/RELEASED/">http://www.slac.stanford.edu/exp/glast/ground/software/geometry/data/RELEASED/</a></p>
 <hr>
   \section requirements cmt/requirements
