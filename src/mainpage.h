@@ -15,7 +15,8 @@ To date three functions are provided:</p>
   overlapsMain.cxx.  It examines all sibling
 positioned volumes (children of the same composition or stack) to see
 that they don't overlap.  It also checks that all children of a composition
-are contained in its envelope.</li>
+are contained in its envelope.  There is also a dump mode which will
+output volume dimensions and positions even when there are no overlaps.</li>
  <li>Documentation of constants, executable constsDoc.exe.  
 See the main program constsDocMain.cxx,
   which invokes detModel utilities to produce html output.</li>
@@ -38,7 +39,7 @@ but if present (any string) they are true.</p>
    <b>summary.exe</b> aPath/myGeoInput.xml  anotherPath/mySummary.html [topVolume  [choice-mode] ]
 </pre>
 <p>See sample output from the last two programs at 
-<a href="http://www.slac.stanford.edu/exp/glast/gorund/software/geomtry/data/RELEASED/">http://www.slac.stanford.edu/exp/glast/gorund/software/geomtry/data/RELEASED/</a></p>
+<a href="http://www.slac.stanford.edu/exp/glast/ground/software/geometry/data/RELEASED/">http://www.slac.stanford.edu/exp/glast/ground/software/geometry/data/RELEASED/</a></p>
 <hr>
   \section requirements cmt/requirements
   \include requirements
