@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.10 2003/06/27 18:47:52 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.11 2004/02/04 00:01:34 jrb Exp $
 
 #include <cmath>
 #include <cassert>
@@ -61,7 +61,6 @@ namespace detCheck {
     bool html = false;
     bool allocStream = false;
     double TO_CU_CM = 0.001;
-    double GM_TO_KG = 0.001;
 
     if (outfileName.size() == 0) {
       m_out = &std::cout; 
@@ -264,7 +263,6 @@ namespace detCheck {
       }
     }
     double convexVol = bBox->getXDim() * bBox->getYDim() * bBox->getZDim();
-    double cuVol = convexVol;
     LogVol* ourLogVol = findLogVol(ens->getName());
 
     if (ourLogVol == 0) {
@@ -367,12 +365,12 @@ namespace detCheck {
     nCopies.pop_back();
   }
 
-  void SolidStats::visitIdField(detModel::IdField* field) {
+  void SolidStats::visitIdField(detModel::IdField* ) {
     // Until we figure out what if anything to do with this...
     return;  
   }
 
-  void SolidStats::visitSeg(detModel::Seg* seg) {
+  void SolidStats::visitSeg(detModel::Seg* ) {
     return;
   }
 

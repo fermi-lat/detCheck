@@ -57,7 +57,11 @@ int main(int argc, char* argv[]) {
 
   // We build the hierarchy; in that case we build all, i.e. both the constants
   // the sections and the materials
-  manager->build(detModel::Manager::all);
+  if (!manager->build(detModel::Manager::all)) {
+    std::cerr << "Unable to build geometry" << std::endl;
+    return -1;
+  }
+
 
   std::string volName("");
   if (argc > 2) volName = std::string(argv[2]);

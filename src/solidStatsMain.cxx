@@ -1,4 +1,4 @@
-//      $Header$  
+//      $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/solidStatsMain.cxx,v 1.5 2002/01/18 19:04:56 jrb Exp $  
 #include <string>
 #include <iostream>
 #include <vector>
@@ -51,7 +51,11 @@ int main(int argc, char* argv[]) {
   manager->setMode(choiceMode);
 
   // Build the full hierarchy (sections, constants, materials)
-  manager->build(detModel::Manager::all);
+  if (!manager->build(detModel::Manager::all)) {
+    std::cerr << "Unable to build geometry" << std::endl;
+    return -1;
+  }
+
 
   detCheck::SolidStats* sStats = 
     new detCheck::SolidStats(std::string(topVolume));

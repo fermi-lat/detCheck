@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.5 2003/06/27 17:04:18 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.6 2003/07/10 17:56:01 jrb Exp $
 
 #include <fstream>
 #include <cmath>
@@ -20,7 +20,6 @@ namespace detCheck {
 
   //  double Overlaps::DEFAULT_EPSILON = 0.000001;
   double Overlaps::DEFAULT_EPSILON = 0.00001;
-
   Overlaps::Overlaps(detModel::Gdd* gdd) {
     m_gdd = gdd;
     m_eps = DEFAULT_EPSILON;
@@ -303,6 +302,7 @@ namespace detCheck {
   // Assuming that loc is formed in such a way that x[0] < x[1],
   // y[0] < y[1] etc.
   bool Overlaps::pairOk(Location* loc1, Location* loc2) {
+    // First check takes scale of items to be compared into account
     bool ok = 
       (loc1->x[0] + m_eps * abs(loc1->x[0]) >= loc2->x[1]) || 
       (loc2->x[0] + m_eps * abs(loc2->x[0])>= loc1->x[1]) ||
@@ -310,6 +310,16 @@ namespace detCheck {
       (loc2->y[0] + m_eps * abs(loc2->y[0])>= loc1->y[1]) ||
       (loc1->z[0] + m_eps * abs(loc1->z[0])>= loc2->z[1]) || 
       (loc2->z[0] + m_eps * abs(loc2->z[0])>= loc1->z[1]);
+    // However, this sort of comparison can fail if both items are
+    // essentially zero, so check for this, too
+    if (!ok) {
+      ok = (( (abs(loc1->x[0]) < m_eps) && (abs(loc2->x[1]) < m_eps) ) ||
+            ( (abs(loc1->x[1]) < m_eps) && (abs(loc2->x[0]) < m_eps) ) ||
+            ( (abs(loc1->y[0]) < m_eps) && (abs(loc2->y[1]) < m_eps) ) ||
+            ( (abs(loc1->y[1]) < m_eps) && (abs(loc2->y[0]) < m_eps) ) ||
+            ( (abs(loc1->z[0]) < m_eps) && (abs(loc2->z[1]) < m_eps) ) ||
+            ( (abs(loc1->z[1]) < m_eps) && (abs(loc2->z[0]) < m_eps) ) );
+    }
 
     if (!ok) {
       (*m_out) << "Overlapping volumes.  Vertex coords are:" << std::endl;
