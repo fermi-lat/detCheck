@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: jrb  Thu Jul 10 10:56:01 PDT 2003
+detCheck/src
+
+Modified Files:
+	Overlaps.cxx mainpage.h 
+Log Message:
+Overlaps.cxx:  Get rid of spurious "failed" message in dump mode
+mainpage.h:    Minor updates
+
+    *
+------------------------------------------------------------
 User: jrb  Thu Jul 10 10:55:25 PDT 2003
 detCheck/doc
 
