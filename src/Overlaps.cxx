@@ -1,6 +1,7 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.1.1.1 2002/01/15 22:25:01 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.2 2002/01/15 23:23:15 jrb Exp $
 
 #include <fstream>
+#include <cmath>
 #include "detCheck/Overlaps.h"
 #include "detModel/Gdd.h"
 #include "detModel/Sections/Volume.h"
@@ -258,9 +259,12 @@ namespace detCheck {
     detModel::BoundingBox *envBB = compos->getEnvelope()->getBBox();
     detModel::BoundingBox *compBB = compos->getBBox();
 
-    if ((envBB->getXDim() + m_eps >= compBB->getXDim() ) &&
-        (envBB->getYDim() + m_eps >= compBB->getYDim() ) &&
-        (envBB->getZDim() + m_eps >= compBB->getZDim() ) ) return true;
+    
+
+    if ((envBB->getXDim() + m_eps*envBB->getXDim() >= compBB->getXDim() ) &&
+        (envBB->getYDim() + m_eps*envBB->getYDim() >= compBB->getYDim() ) &&
+        (envBB->getZDim() + m_eps*envBB->getZDim() >= compBB->getZDim() ) )
+        return true;
 
     (*m_out) << "Envelope " << compos->getEnvelopeRef() 
              << " too small for volume " 
@@ -291,12 +295,12 @@ namespace detCheck {
   // y[0] < y[1] etc.
   bool Overlaps::pairOk(Location* loc1, Location* loc2) {
     bool ok = 
-      (loc1->x[0] + m_eps >= loc2->x[1]) || 
-      (loc2->x[0] + m_eps >= loc1->x[1]) ||
-      (loc1->y[0] + m_eps >= loc2->y[1]) || 
-      (loc2->y[0] + m_eps >= loc1->y[1]) ||
-      (loc1->z[0] + m_eps >= loc2->z[1]) || 
-      (loc2->z[0] + m_eps >= loc1->z[1]);
+      (loc1->x[0] + m_eps * abs(loc1->x[0]) >= loc2->x[1]) || 
+      (loc2->x[0] + m_eps * abs(loc2->x[0])>= loc1->x[1]) ||
+      (loc1->y[0] + m_eps * abs(loc1->y[0])>= loc2->y[1]) || 
+      (loc2->y[0] + m_eps * abs(loc2->y[0])>= loc1->y[1]) ||
+      (loc1->z[0] + m_eps * abs(loc1->z[0])>= loc2->z[1]) || 
+      (loc2->z[0] + m_eps * abs(loc2->z[0])>= loc1->z[1]);
 
     if (!ok) {
       (*m_out) << "Overlapping volumes.  Vertex coords are:" << std::endl;
