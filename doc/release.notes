@@ -1,6 +1,11 @@
-/** @file release.notes
+/** @file release.notes 
  *  Package detCheck
  * Coordinator:  J. Bogart
+ * 07-oct-2003:jrb tag v1r2  Two new diagnositics added:
+ *  heprep.exe (Riccardo) generates heprep description of detector suitable
+               for use with Fred
+    dumpIds.exe (Joanne) Write complete list of VolumeIdentifiers for all
+               sensitive volumes
  * 10-jul-2003:jrb tag v1r1p3 Update doc; Eliminate spurious error messages
                               from overlaps checker in dump mode
  * 27-jun-2003 jrb tag v1r1p2 Correct units (kg --> gm) in console output for 
