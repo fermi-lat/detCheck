@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.2 2002/01/15 23:23:15 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.3 2002/01/16 01:07:55 jrb Exp $
 
 #include <cmath>
 #include <cassert>
@@ -25,7 +25,8 @@ namespace detCheck {
 
   double SolidStats::PI = 0;    // Set properly at first use
   SolidStats::SolidStats(std::string topVolume) : 
-    m_gdd(0), m_topName(topVolume), m_out(0), m_verbose(false)
+    m_gdd(0), m_topName(topVolume), m_out(0), m_diag(0), 
+    m_allocDiag(false), m_verbose(false)
   {
     setRecursive(0);
     detModel::Manager* man = detModel::Manager::getPointer();
@@ -49,14 +50,14 @@ namespace detCheck {
 
   }
 
-  void SolidStats::report(std::string errfileName, bool verbose, bool html) {
+  void SolidStats::report(std::string outfileName, bool verbose, bool html) {
     m_verbose = verbose;
     bool allocStream = false;
-    if (errfileName.size() == 0) {
+    if (outfileName.size() == 0) {
       m_out = &std::cout;  // or out = new ostream(std::out);  ?
     }
     else {
-      m_out = new std::ofstream(errfileName.c_str());
+      m_out = new std::ofstream(outfileName.c_str());
       allocStream = true;
     }
 
@@ -69,7 +70,8 @@ namespace detCheck {
       (*m_out) << "<table> cellpadding='3' border='1'>" << std::endl;
       (*m_out) << "<tr bgcolor='#c0ffc0' align ='left'>";
       (*m_out) << "<th>Material Name</th><th># Log. Vol.</th>";
-      (*m_out) << "<th># Phys. Vol.</th><th>Volume (cubic mm)</th></tr>" << std::endl;
+      (*m_out) << "<th># Phys. Vol.</th><th>Volume (cubic mm)</th></tr>" 
+               << std::endl;
     }
     else {  // just title
       (*m_out) << "Materials Summary" << std::endl;
@@ -99,10 +101,20 @@ namespace detCheck {
       
 
     if (allocStream) delete m_out;
+    if (m_allocDiag) delete m_diag;
     return;
   }
 
- 
+  void SolidStats::setDiagnostic(std::string filename) {
+    if (filename.size() == 0) {
+      m_diag = &std::cout;
+    }
+    else {
+      m_diag = new std::ofstream(filename.c_str());
+      m_allocDiag = true;
+    }
+  }
+
   void SolidStats::visitGdd(detModel::Gdd* gdd) {
 
     initMaterials(gdd);
@@ -129,6 +141,11 @@ namespace detCheck {
   }
 
   void SolidStats::visitSection(detModel::Section* sect) {
+    // Initialize stacks and other state information
+    nCopies.push_back(1);
+    embedCuVol.push_back(0);
+    envelopeNow = false;
+
     // If we have a non-null top volume, attempt to find it.
     if (m_topName.size() != 0) {
       m_top = m_gdd->getVolumeByName(m_topName);
@@ -155,21 +172,28 @@ namespace detCheck {
     if (detModel::Composition* comp = 
         dynamic_cast<detModel::Composition*>(ens)) {
       detModel::Shape* env = comp->getEnvelope();
+      envelopeNow = true;
       env->AcceptNotRec(this);
-      // Also need to set field in logVol saying this is an envelope
-      LogVol* envLog = findLogVol(env->getName());
-      envLog->envelope = true;
+      envelopeNow = false;
 
       matName = env->getMaterial();
       bBox = env->getBBox();
+
+      if (m_diag) {
+        *m_diag << "Starting to process composition volume "
+               << ens->getName() << std::endl;
+      }
+    }
+    else {
+      if (m_diag) {
+        *m_diag << "Starting to process stack volume " 
+               << ens->getName() << std::endl;
+      }
     }
     double convexVol = bBox->getXDim() * bBox->getYDim() * bBox->getZDim();
     double cuVol = convexVol;
     LogVol* ourLogVol = findLogVol(ens->getName());
 
-    
-    //    LogVolMapIt it;
-    //if ((it  = m_logVols.find(ens->getName())) != m_logVols.end() ) {
     if (ourLogVol == 0) {
       ourLogVol = new LogVol();
       ourLogVol->name = ens->getName();
@@ -186,36 +210,38 @@ namespace detCheck {
       assert(ourLogVol->envelope == false);
     }
 
+    // Update our copy count
+    ourLogVol->nCopy += getCopyCount();
+
     std::vector<detModel::Position*>::iterator posIt;
     std::vector<detModel::Position*> positions = ens->getPositions();
+
+    // Initialize our entry on the cubic volume accumulator stack
+    embedCuVol.push_back(0);
 
     for (posIt = positions.begin(); posIt != positions.end(); posIt++) {
       detModel::Position *pos = *posIt;
 
-      // Causes volume associated with positioning elt. to be registered
-      // if it isn't already  and updates nCopy 
+      // Updates nCopy appropriately and causes associated logical
+      // volume to be visited.
       pos->AcceptNotRec(this);
-
-      detModel::Volume* ourVol = pos->getVolume();
-      // If it was a Choice, resolve it first
-      if (detModel::Choice* ch = dynamic_cast<detModel::Choice*>(ourVol)) {
-        ourVol = ch->getVolumeByMode(m_choiceMode);
-      }
-
-      LogVol* logVol = findLogVol(ourVol->getName());
-      //      LogVol* logVol = findLogVol(pos->getVolumeRef()); 
-      assert(logVol != 0);
-
-
-      unsigned nCopy = 1;
-      if (detModel::AxisMPos* mpos = 
-          dynamic_cast<detModel::AxisMPos*>(pos) ) {
-        nCopy = mpos->getNcopy();
-      }
-      cuVol -= nCopy * logVol->vol;
     }
-    assert(cuVol > 0.0);
-    ourLogVol->vol = cuVol;
+
+    // Use cubic volume accumulator to compute our volume, properly
+    // subtracting volumes of embedded things
+    ourLogVol->vol = convexVol - embedCuVol[embedCuVol.size() - 1];
+    embedCuVol.pop_back();
+
+    // Finally, add our (convex) volume to parent volume's accumulator
+    // entry
+    accumulateVolume(convexVol);
+    if (m_diag) {
+      *m_diag << "finished processing ensemble " << ens->getName() 
+              << std::endl;
+      *m_diag << "   nCopy: " << ourLogVol->nCopy
+              << "  convex volume: " << ourLogVol->convexVol
+              << "   volume: " << ourLogVol->vol << std::endl;
+    }
   }
 
   void SolidStats::visitBox(detModel::Box* box) {
@@ -227,11 +253,13 @@ namespace detCheck {
 
   void SolidStats::visitTube(detModel::Tube* tube) {
     if (PI <= 0.0) {
-      PI = asin(-1);
+      PI = (asin(-1));
+      if (PI < 0) PI = -PI;
     }
-    double cuVol = PI * tube->getZ() * 
-      (tube->getRout()*tube->getRout() -
-       tube->getRin()*tube->getRin());
+    double rOut = tube->getRout();
+    double rIn = tube->getRin();
+    double cuVol = PI * tube->getZ() * (rOut * rOut - rIn * rIn);
+
     registerShape(tube, cuVol);
   }
 
@@ -239,16 +267,14 @@ namespace detCheck {
     // First visit our volume   
     detModel::Volume* ourVol = pos->getVolume();
 
+    // NOTE:  May not need this any more
     // If it was a Choice, resolve it first
     if (detModel::Choice* ch = dynamic_cast<detModel::Choice*>(ourVol)) {
       ourVol = ch->getVolumeByMode(m_choiceMode);
     }
+    nCopies.push_back(1);       // PosXYZ by definition positions only 1 copy
     ourVol->AcceptNotRec(this);
-
-    // Increment its copy count.
-    LogVol* logVol = findLogVol(ourVol->getName());
-    assert(logVol != 0);
-    logVol->nCopy++;
+    nCopies.pop_back();
   }
 
   void SolidStats::visitAxisMPos(detModel::AxisMPos* axisPos) {
@@ -259,12 +285,13 @@ namespace detCheck {
     if (detModel::Choice* ch = dynamic_cast<detModel::Choice*>(ourVol)) {
       ourVol = ch->getVolumeByMode(m_choiceMode);
     }
+
+    // Push copy count
+    nCopies.push_back(axisPos->getNcopy());
     ourVol->AcceptNotRec(this);
 
-    // Increment its copy count.
-    LogVol* logVol = findLogVol(ourVol->getName());
-    assert(logVol != 0);
-    logVol->nCopy += axisPos->getNcopy();
+    // Get rid of our copy count (last entry)
+    nCopies.pop_back();
   }
 
   void SolidStats::visitIdField(detModel::IdField* field) {
@@ -276,7 +303,9 @@ namespace detCheck {
     return;
   }
 
-  bool SolidStats::registerShape(detModel::Shape* shape, double cuVol) {
+  //  bool SolidStats::registerShape(detModel::Shape* shape, double cuVol) {
+  SolidStats::LogVol* SolidStats::registerShape(detModel::Shape* shape, 
+                                                double cuVol) {
     LogVol* logVol;
 
     logVol = findLogVol(shape->getName());
@@ -289,16 +318,32 @@ namespace detCheck {
       detModel::BoundingBox *bBox = shape->getBBox();
       logVol->convexVol = bBox->getXDim() * bBox->getYDim() * bBox->getZDim();
       logVol->nCopy = 0;
-      logVol->envelope = false;
+      logVol->envelope = envelopeNow;
 
       m_logVols[shape->getName()] = logVol;
-      return false;
+      //      return false;
     }
     else {
 
       assert(logVol->vol == cuVol);
-      return true;
+      //      return true;
     }
+    unsigned newCopies = getCopyCount();
+    logVol->nCopy += getCopyCount();
+
+    if (m_diag) {
+      *m_diag << "   finished processing shape " << shape->getName() 
+              << std::endl;
+      *m_diag << "      nCopy: " << logVol->nCopy
+              << "   volume: " << logVol->vol << std::endl;
+    }
+
+    // Accumulator has only to do with our immediately enclosing volume,
+    // so relevant copy count is just the top entry on the copy count stack
+    // If we're an envelope we don't participate in this at all; our
+    // associated composition takes care of it
+    if (!logVol->envelope) accumulateVolume(cuVol * getLastCount());
+    return logVol;
   }
 
   SolidStats::LogVol *SolidStats::findLogVol(std::string name) {
@@ -330,16 +375,23 @@ namespace detCheck {
 
   }
 
-  /*
-  void Overlaps::printChildren(detModel::Ensemble *ens) {
-    std::vector<detModel::Position*> positions = ens->getPositions();
-    
-    for (unsigned int iPos = 0; iPos < positions.size(); iPos++) {
-      (*m_out) << "Child volume #" << iPos << " is " <<
-        positions[iPos]->getVolumeRef() << std::endl;
+  unsigned SolidStats::getCopyCount() {
+    unsigned result = 1;
+
+    for (unsigned i = 0; i < nCopies.size(); i++) {
+      result *= nCopies[i];
     }
-    (*m_out) << std::endl;
-    return;
+    return result;
   }
-  */
+
+  unsigned SolidStats::getLastCount() {
+    return nCopies[nCopies.size() - 1];
+  }
+
+
+  void SolidStats::accumulateVolume(double cuVol) {
+    double accum = embedCuVol[embedCuVol.size() - 1] + cuVol;
+    embedCuVol.pop_back();
+    embedCuVol.push_back(accum);
+  }
 }
