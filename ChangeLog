@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: riccardo  Mon Oct  6 07:59:34 PDT 2003
+detCheck/src
+
+Modified Files:
+	HepRepSectionsVisitor.cxx 
+Log Message:
+Fixed a bug on the TypeTree building of the HepRep file 
+
+
+    *
+------------------------------------------------------------
 User: riccardo  Mon Oct  6 07:15:14 PDT 2003
 detCheck/src
 
