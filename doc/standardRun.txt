@@ -13,6 +13,9 @@ When changes have been committed to xmlGeoDbs
 4. cd detCheck/rh72_gcc2953
    (or whatever the binary directory is called)
 
+   or (better option) use glastpack to invoke executables in steps
+   5-7 below.
+
 5. Run constsDoc for both "regular" and CAL-segmented geometries:
 
   ./constsDoc.exe $XMLGEODBSROOT/xml/flight/flight.xml $outDir/flight-doc.html
@@ -32,6 +35,11 @@ When changes have been committed to xmlGeoDbs
    ./summary.exe $XMLGEODBSROOT/xml/flight/flightSegVols.xml \
     $outDir/materialsSummarySegRecon.html LAT recon
 
+7. Run overlaps checker in dump mode, causing volume dimensions and
+   relative positions to be output:
+
+   ./test.exe $XMLGEODBSROOT/xml/flight/flightSegVols.xml \
+   $outDir/flightOverlaps.txt verbose dump
 
                ---------------------------------------------
 
@@ -46,10 +54,10 @@ When a new rtag has been made for xmlGeoDbs,
    and define an environment variable, say outDir, to point to it 
    as above.
 
-3-6. Execute steps 3-6 as above.
+3-7. Execute steps 3-7 as above.
 
 
-7. If output seems satisfactory, make a soft link to the new output directory
+8. If output seems satisfactory, make a soft link to the new output directory
 
      ln -s $outDir $outDir/../RELEASED
 
