@@ -1,5 +1,15 @@
 ------------------------------------------------------------
 User: jrb  Tue Jan 15 17:07:55 PST 2002
+detCheck/src
+
+Modified Files:
+	SolidStats.cxx 
+Log Message:
+Fixed handling of <choice>, but still have problems
+
+    *
+------------------------------------------------------------
+User: jrb  Tue Jan 15 17:07:55 PST 2002
 detCheck/detCheck
 
 Modified Files:
