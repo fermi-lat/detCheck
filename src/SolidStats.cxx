@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.4 2002/01/17 01:47:38 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.5 2002/01/17 02:12:27 jrb Exp $
 
 #include <cmath>
 #include <cassert>
@@ -67,7 +67,7 @@ namespace detCheck {
       (*m_out) << 
         "<html><head><title>Materials Summary</title></head>" << std::endl;
       (*m_out) << "<body> <h2>Materials Summary</h2>" << std::endl;
-      (*m_out) << "<table> cellpadding='3' border='1'>" << std::endl;
+      (*m_out) << "<table cellpadding='3' border='1'>" << std::endl;
       (*m_out) << "<tr bgcolor='#c0ffc0' align ='left'>";
       (*m_out) << "<th>Material Name</th><th># Log. Vol.</th>";
       (*m_out) << "<th># Phys. Vol.</th><th>Volume (cubic mm)</th></tr>" 
@@ -80,16 +80,20 @@ namespace detCheck {
     // Always output summary per-material information 
     for (MatMapIt mapIt = m_mats.begin(); mapIt != m_mats.end(); ++mapIt) {
       Material* mat = mapIt->second;
+
+      if (!mat->logCount) continue;
+
       if (html) {
-        (*m_out) << "<tr><td>" << mapIt->first << "</td><td>" << mat->logCount
-                 << "</td><td>" << mat->physCount << "</td><td>" 
+        (*m_out) << "<tr><td>" << mapIt->first << "</td><td align='right'>" 
+                 << mat->logCount << "</td><td align='right'>" 
+                 << mat->physCount << "</td><td>" 
                  << mat->cuVol << "</td></tr>" << std::endl;
       }
       else {
-        (*m_out) << " " << mapIt->first <<  ":" << std::endl;
-        (*m_out) << "#Log volumes = " << mat->logCount
-                 << " #Phys volumes = " << mat->physCount 
-                 << " Total volume = " << mat->cuVol << " cu mm" << std::endl;
+        (*m_out) << " " << mapIt->first <<  ":  "
+                 << "  #Log = " << mat->logCount
+                 << "  #Phys = " << mat->physCount 
+                 << "  Total volume = " << mat->cuVol << " cu mm" << std::endl;
       }
     }
 
@@ -127,6 +131,10 @@ namespace detCheck {
     for (LogVolMapIt volIt = m_logVols.begin(); volIt != m_logVols.end();
          ++volIt) {
       LogVol *logVol = volIt->second;
+
+      // Don't include envelopes; their cubic volume has already
+      // been handled by the associated composition.
+      if (logVol->envelope) continue;
 
       MatMapIt mapIt = m_mats.find(logVol->matName);
       assert (mapIt != m_mats.end());
@@ -327,7 +335,6 @@ namespace detCheck {
       assert(logVol->vol == cuVol);
       //      return true;
     }
-    unsigned newCopies = getCopyCount();
     logVol->nCopy += getCopyCount();
 
     if (m_diag) {
