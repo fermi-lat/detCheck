@@ -24,6 +24,9 @@
 #include "detModel/Utilities/Color.h"
 #include "detModel/Utilities/Vector.h"
 
+#include "xmlUtil/id/IdDict.h"
+#include "xmlUtil/id/Identifier.h"
+
 #include "HepRepSectionsVisitor.h"
 
 namespace detModel{
@@ -137,6 +140,13 @@ void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
     {
       out << "<instance type=\"" << ensemble->getName() << "\">" << std::endl;
       out << "<attvalue name=\"ID\" value =\""<< m_actualID.name() << "\" showlabel =\"\"/>" << std::endl;
+      
+      xmlUtil::Identifier identifier;
+      for(unsigned int v=0;v<m_actualID.size();v++)
+          identifier.append(m_actualID[v]);
+
+      out << "<attvalue name=\"IDname\" value =\""<< m_idDictionary->getNameSeqString(identifier) << "\" showlabel =\"\"/>" << std::endl;      
+
       HepTransform3D atr = m_actualTransform.back();
       Hep3Vector t = atr.getTranslation();
 
@@ -207,6 +217,11 @@ void  HepRepSectionsVisitor::visitBox(Box* box)
     {
       out << "<instance type=\"" << box->getName() << "\">" << std::endl;
       out << "<attvalue name=\"ID\" value =\""<< m_actualID.name() << "\" showlabel =\"\"/>" << std::endl;
+      xmlUtil::Identifier identifier;
+      for(unsigned int v=0;v<m_actualID.size();v++)
+          identifier.append(m_actualID[v]);
+
+      out << "<attvalue name=\"IDname\" value =\""<< m_idDictionary->getNameSeqString(identifier) << "\" showlabel =\"\"/>" << std::endl;      
       out << "<attvalue name=\"Color\" value =\"(" <<
         j->second->getRed() << "," <<
         j->second->getGreen() << "," <<
