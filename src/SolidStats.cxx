@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.3 2002/01/16 01:07:55 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.4 2002/01/17 01:47:38 jrb Exp $
 
 #include <cmath>
 #include <cassert>
@@ -253,8 +253,7 @@ namespace detCheck {
 
   void SolidStats::visitTube(detModel::Tube* tube) {
     if (PI <= 0.0) {
-      PI = (asin(-1));
-      if (PI < 0) PI = -PI;
+      PI = 2 * (asin(1));
     }
     double rOut = tube->getRout();
     double rIn = tube->getRin();
