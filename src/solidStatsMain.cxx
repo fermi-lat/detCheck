@@ -57,6 +57,7 @@ int main(int argc, char* argv[]) {
   detCheck::SolidStats* sStats = 
     new detCheck::SolidStats(std::string(topVolume));
 
+  sStats->setDiagnostic("diag.txt");
   // Traverse detModel and build up our own data structures
   manager->startVisitor(sStats);
 

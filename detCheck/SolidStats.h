@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/SolidStats.h,v 1.2 2002/01/15 23:23:15 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/SolidStats.h,v 1.3 2002/01/16 01:07:55 jrb Exp $
 
 #include <string>
 #include <iostream>
@@ -42,6 +42,14 @@ namespace detCheck {
     */
     void report(std::string ofile, bool verbose = false, bool hmtl = false);
 
+    /** Provide diagnostic output
+        @arg @b filename  File to which output is written, or standard
+                          output if string is empty.
+
+        Default is to provide no diagnositic output
+    */
+    void setDiagnostic(std::string filename);
+
     // The following are all part of the SectionsVisitor interface
     virtual void visitGdd(detModel::Gdd* gdd);
     virtual void visitSection(detModel::Section* sect);
@@ -62,14 +70,18 @@ namespace detCheck {
     /// Name of volume to be treated as top
     std::string   m_topName;
     std::ostream* m_out;
+    std::ostream* m_diag;
+    bool          m_allocDiag;
     bool          m_verbose;
     static double PI;   // have to initialize
+    /// Are we processing an envelope? 
+    bool envelopeNow;
 
-    /*! Add a solid volume to solids map if it's not already there.
-        \return true or false depending on whether shape is already registered.
-       If shape has already been registered with a different volume,
-       do assert; this indicates an error in the xml input description. */ 
-    bool  registerShape(detModel::Shape* shape, double cuVol);
+    /// Keep track of nCopy multipliers as we recurse through geometry
+    std::vector<unsigned> nCopies;
+
+    /// Keep track of accumulated embedded volumes at each level
+    std::vector<double> embedCuVol;
 
     /// Internal data structure to keep track of "logical volume"
     typedef struct s_logVol {
@@ -118,13 +130,33 @@ namespace detCheck {
 
     LogVolMap m_logVols;
 
+
     std::string m_choiceMode;
+
+    /// Internal routine to update cubic volume accumulator @c embedCuVol.
+    void accumulateVolume(double cuVol);
+
+    /// Internal routine to compute total copy count from stacked values
+    /// in @c copyCount
+    unsigned getCopyCount();
+
+    unsigned getLastCount();
+
+
     /// Utility to find our data structure for a logical volume, given 
     /// its name.
     LogVol *findLogVol(std::string name);
 
     /// Utility routine to set up materials map
     void initMaterials(detModel::Gdd* gdd);
+
+    /** Add a solid volume to solids map if it's not already there,
+        initialize or update entries, and update volume accumulator.
+        \return pointer to logVol struct
+        \return true or false depending on whether shape is already registered.
+       If shape has already been registered with a different volume,
+       do assert; this indicates an error in the xml input description. */ 
+    LogVol*  registerShape(detModel::Shape* shape, double cuVol);
 
   };  //end SolidStats class
 }  // end namespace detCheck
