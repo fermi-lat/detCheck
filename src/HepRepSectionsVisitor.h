@@ -83,6 +83,11 @@ namespace detModel{
      */
     std::string getMode(){return m_mode;};
 
+    /**
+     * Set output file name
+     */
+    void setOutputFile(std::string name){m_outputFile = name;};
+
     void setIDPrefix(idents::VolumeIdentifier pr){m_idPrefix = pr;};
 
     void setPrefixTransform(HepTransform3D t){m_prefixTransform = t;};
@@ -93,6 +98,7 @@ namespace detModel{
     std::ofstream out;
 
     std::string m_mode;
+    std::string m_outputFile;
 
     std::vector<HepTransform3D> m_actualTransform;
     HepTransform3D m_prefixTransform;
