@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Fri May  2 14:16:28 PDT 2003
+detCheck
+
+Modified Files:
+	.cvsignore 
+Log Message:
+Add new-style binary directory to list to be ignored
+
+    *
+------------------------------------------------------------
 User: jrb  Mon Jan 27 08:40:50 PST 2003
 detCheck/doc
 
