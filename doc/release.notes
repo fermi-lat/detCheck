@@ -1,6 +1,9 @@
 /** @file release.notes 
  *  Package detCheck
  * Coordinator:  J. Bogart
+ * 19-mar-2004:jrb tag v1r2p1 Main programs now check if parse succeeded.
+ *                Overlap checker now accepts compares between 2 very
+ *                small values
  * 08-jan-2004:jrb tag v1r2p0 Improved output for dumpIds.exe
  * 07-oct-2003:jrb tag v1r2  Two new diagnositics added:
  *  heprep.exe (Riccardo) generates heprep description of detector suitable
