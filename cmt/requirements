@@ -1,5 +1,5 @@
 package detCheck
-# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/cmt/requirements,v 1.1.1.1 2002/01/15 22:25:01 jrb Exp $
+# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/cmt/requirements,v 1.2 2002/05/09 23:00:20 jrb Exp $
 
 use detModel v2r*
 use xmlGeoDbs v1r*
@@ -15,7 +15,7 @@ apply_pattern package_headers
 library detCheck -no_share ${detCheck_headers} -no_share \
    Overlaps.cxx SolidStats.cxx
 
-private
+##private
 application test overlapsMain.cxx Overlaps.cxx
 
 # Only can build this app on Linux (doesn't compile on Windows).
@@ -24,6 +24,8 @@ application test overlapsMain.cxx Overlaps.cxx
 # say
 #     $ gmake Linux
 application summary -group=Linux solidStatsMain.cxx SolidStats.cxx 
+
+application constsDoc constsDocMain.cxx 
 
 
 
