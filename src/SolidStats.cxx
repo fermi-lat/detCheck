@@ -1,7 +1,8 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.7 2002/01/17 22:08:59 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.8 2002/01/18 19:04:56 jrb Exp $
 
 #include <cmath>
 #include <cassert>
+#include <ctime>
 #include "detCheck/SolidStats.h"
 
 // may need need some or all of the following:
@@ -54,6 +55,7 @@ namespace detCheck {
     }
 
   }
+
 
   void SolidStats::report(std::string outfileName) {
     bool html = false;
@@ -165,8 +167,9 @@ namespace detCheck {
                  <<  intMass << "</td></tr>" 
                  << std::endl;
       }
-        
-      (*m_out) << "</table></body></html>" << std::endl;
+      (*m_out) << "</table>" << std::endl;
+      outputVersion();        
+      (*m_out) << "</body></html>" << std::endl;
     }
       
 
@@ -187,7 +190,8 @@ namespace detCheck {
 
   void SolidStats::visitGdd(detModel::Gdd* gdd) {
 
-    initMaterials(gdd);
+    m_gdd = gdd;
+    initMaterials();
     
     // Do the actual visiting:
     (gdd->getSections())[0]->AcceptNotRec(this);
@@ -421,9 +425,9 @@ namespace detCheck {
     return it->second;
   }
 
-  void SolidStats::initMaterials(detModel::Gdd* gdd) {
+  void SolidStats::initMaterials() {
     std::map<std::string, detModel::Material*>  gddMats = 
-                    gdd->getMaterials()->getMaterials();
+                    m_gdd->getMaterials()->getMaterials();
     typedef std::map<std::string, detModel::Material*>::iterator MaterialsIt;
 
     for (MaterialsIt gddMatIt = gddMats.begin(); gddMatIt != gddMats.end();
@@ -440,6 +444,15 @@ namespace detCheck {
       m_mats[detMat->getName()] = mat;
     }
 
+  }
+
+  void SolidStats::outputVersion() {
+    unsigned secs = time(0);
+    std::string cvsId = m_gdd->getCVSid();
+    (*m_out) <<  "<hrule /><br />This page created " 
+             <<  ctime((time_t*)(&secs))
+             << "<br /> from XML input: " 
+             << cvsId << std::endl;
   }
 
   unsigned SolidStats::getCopyCount() {

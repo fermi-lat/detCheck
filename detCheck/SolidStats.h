@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/SolidStats.h,v 1.4 2002/01/17 01:47:37 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/SolidStats.h,v 1.5 2002/01/17 22:08:43 jrb Exp $
 
 #include <string>
 #include <iostream>
@@ -145,7 +145,10 @@ namespace detCheck {
     LogVol *findLogVol(std::string name);
 
     /// Utility routine to set up materials map
-    void initMaterials(detModel::Gdd* gdd);
+    void initMaterials();
+
+    /// Utility used by @b report to output xml file version, etc. 
+    void outputVersion();
 
     /** Add a solid volume to solids map if it's not already there,
         initialize or update entries, and update volume accumulator.
