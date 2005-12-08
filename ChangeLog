@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: riccardo  Thu Dec  8 09:19:00 PST 2005
+detCheck/src
+
+Modified Files:
+	HepRepSectionsVisitor.cxx 
+Log Message:
+Resolved a bad bug on rotations of volume in the HepRep visitor
+
+    *
+------------------------------------------------------------
 User: golpa  Fri Jul 15 16:01:49 PDT 2005
 detCheck/cmt
 
