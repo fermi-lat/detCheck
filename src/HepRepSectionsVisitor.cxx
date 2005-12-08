@@ -305,16 +305,11 @@ void  HepRepSectionsVisitor::visitBox(Box* box)
 
 void  HepRepSectionsVisitor::visitPosXYZ(PosXYZ* pos)
 {
+  HepRotation rot;
+  rot.rotateX(pos->getXRot()*M_PI/180);
+  rot.rotateY(pos->getYRot()*M_PI/180);
+  rot.rotateZ(pos->getZRot()*M_PI/180);
 
-  // NOTE:  If the rotation has a non-zero value for more than
-  //        one component, this probably doesn't do the right
-  //        thing.  Chances are some work has to be done to
-  //        force the components to be composed in the 
-  //        opposite order.
-  //  HepRotation rot(pos->getXRot()*M_PI/180, pos->getYRot()*M_PI/180, 
-  //                  pos->getZRot()*M_PI/180);
-  HepRotation rot(-pos->getXRot()*M_PI/180, -pos->getYRot()*M_PI/180, 
-                  -pos->getZRot()*M_PI/180);
   Hep3Vector t(pos->getX(), pos->getY(), pos->getZ());  
   HepTransform3D tr(rot,t);
   HepTransform3D atr = (m_actualTransform.back())*tr;
