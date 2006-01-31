@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Mon Jan 30 16:00:45 PST 2006
+detCheck/src
+
+Modified Files:
+	Overlaps.cxx SolidStats.cxx dumpIds.cxx 
+Log Message:
+Add identifying information about input to output for these diagnostics
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v1r4p1, operation: add
 Package: detCheck
