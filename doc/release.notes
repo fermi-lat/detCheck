@@ -3,7 +3,9 @@
  * Coordinator:  J. Bogart
       EOH
 
-   v1r4p1   8-Dec-2005 jrb (for Riccardo) Fix to HepRepSectionsVisitor.cxx to
+  v1r4p2  30-Jan-2006 jrb Identify input file in output of overlap checker,
+                          dumpIds, and volume summary diagnostics
+  v1r4p1   8-Dec-2005 jrb (for Riccardo) Fix to HepRepSectionsVisitor.cxx to
                            do rotations properly
  * 14-jan-2005: riccardo v1r4 HepRep visitor now produce full qualified name for instances
  * 21-oct-2004:jrb v1r2p6  Really do it this time
