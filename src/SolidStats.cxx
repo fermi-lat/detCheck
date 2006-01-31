@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.11 2004/02/04 00:01:34 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.12 2004/03/19 19:06:32 jrb Exp $
 
 #include <cmath>
 #include <cassert>
@@ -450,8 +450,10 @@ namespace detCheck {
     std::string cvsId = m_gdd->getCVSid();
     (*m_out) <<  "<hrule /><br />This page created " 
              <<  ctime((time_t*)(&secs))
-             << "<br /> from XML input: " 
-             << cvsId << std::endl;
+             << "<br /> from XML input cvs version: " 
+             << cvsId << std::endl
+             << "<br /> file path: "
+             << detModel::Manager::getPointer()->getNameFile() << std::endl;
   }
 
   unsigned SolidStats::getCopyCount() {
