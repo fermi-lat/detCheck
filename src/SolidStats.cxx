@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.12 2004/03/19 19:06:32 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.13 2006/01/31 00:00:41 jrb Exp $
 
 #include <cmath>
 #include <cassert>
@@ -16,6 +16,7 @@
 #include "detModel/Sections/Shape.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Sphere.h"
 #include "detModel/Sections/Choice.h"
 #include "detModel/Sections/PosXYZ.h"
 #include "detModel/Sections/AxisMPos.h"
@@ -333,6 +334,21 @@ namespace detCheck {
 
     registerShape(tube, cuVol);
   }
+
+  void SolidStats::visitSphere(detModel::Sphere* sphere) {
+    if (PI <= 0.0) {
+      double one = 1.0;
+      PI = 2 * (asin(one));
+    }
+    //\todo This formula just compute the total volume of the complete spherical shell,
+    // not the real one
+    double rOut = sphere->getRout();
+    double rIn = sphere->getRin();
+    double cuVol = PI * (4/3.0) * (rOut * rOut - rIn * rIn);
+
+    registerShape(sphere, cuVol);
+  }
+
 
   void SolidStats::visitPosXYZ(detModel::PosXYZ* pos) {
     // First visit our volume   
