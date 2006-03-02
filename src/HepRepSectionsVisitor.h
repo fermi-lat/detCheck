@@ -51,7 +51,7 @@ namespace detModel{
     /**
      * This is the visitor for the Tube 
      */
-    virtual void visitTube(Tube*){};
+    virtual void visitTube(Tube*);
 
     /**
      * This is the visitor for the Sphere 
