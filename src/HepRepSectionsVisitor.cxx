@@ -14,6 +14,7 @@
 #include "detModel/Sections/Section.h"
 #include "detModel/Gdd.h"
 #include "detModel/Sections/Box.h"
+#include "detModel/Sections/Tube.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/PosXYZ.h"
 #include "detModel/Sections/Stack.h"
@@ -301,6 +302,77 @@ void  HepRepSectionsVisitor::visitBox(Box* box)
   out << "/ForceWireframe 0" << std::endl;
 
   */
+}
+
+void  HepRepSectionsVisitor::visitTube(Tube* tube)
+{
+  m_actualName.push_back(tube->getName());
+
+  typedef std::map<std::string, Color*> M;
+  M::const_iterator j; 
+
+  j = colorsMap.find(tube->getMaterial());
+  if (j == colorsMap.end()) return;
+
+  if (m_mode == "type")
+    {
+      out << "<type name =\"" <<  tube->getName() << "\" >" << std::endl;
+      out << "<attvalue name=\"DrawAs\" value =\"Prism\" showlabel =\"\"/>" << std::endl;
+      out << "<attvalue name=\"Material\" value =\""<< tube->getMaterial() << "\" showlabel =\"\"/>" << std::endl;
+      out << "<attvalue name=\"Dim\" value =\"(" 
+          <<  tube->getZ() << ", " 
+          <<  tube->getRin() << ", " 
+          <<  tube->getRout() << ")\" showlabel =\"\"/>" << std::endl;
+
+      out << "<attvalue name=\"Color\" value =\"" <<
+        j->second->getRed() << "," <<
+        j->second->getGreen() << "," <<
+        j->second->getBlue() << "\" showlabel =\"\"/>" << std::endl;      
+      
+      out << "<attvalue name=\"Sensitive\" value =\""<< tube->getSensitive() << "\" showlabel =\"\"/>" << std::endl;
+      out << "</type>" << std::endl;
+      m_types.push_back(tube->getName());
+    }
+  else
+    {
+      // Here we build the full qualified Name of the Type
+      out << "<instance type=\"" << getFullName()  << "\">" << std::endl;
+      out << "<attvalue name=\"ID\" value =\""<< m_actualID.name() << "\" showlabel =\"\"/>" << std::endl;
+      xmlUtil::Identifier identifier;
+      for(int ii=0;ii<m_actualID.size();ii++)
+          identifier.append(m_actualID[ii]);
+
+      out << "<attvalue name=\"IDname\" value =\""<< m_idDictionary->getNameSeqString(identifier) << "\" showlabel =\"\"/>" << std::endl;      
+      HepPoint3D v(0,0,0);
+      HepPoint3D v1;
+      double dz = tube->getZ()/2;
+      double rin = tube->getRin();
+      double rout = tube->getRout();
+      HepTransform3D atr = m_actualTransform.back();
+
+      unsigned int n = 20;
+      double angle;
+          
+      for(unsigned int i=0; i<n; i++)
+      {
+        angle = 2*M_PI*((double)i/n);
+        v.setX(rout*sin(angle)); v.setY(rout*cos(angle)); v.setZ(-dz); v1 = (atr*v);           
+        out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() << "\" z = \"" << v1.z() << "\">" << std::endl;
+        out << "</point>" << std::endl;
+      }
+      for(unsigned int i=0; i<n; i++)
+      {
+        angle = 2*M_PI*((double)i/n);
+        v.setX(rout*sin(angle)); v.setY(rout*cos(angle)); v.setZ(dz); v1 = (atr*v);           
+        out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() << "\" z = \"" << v1.z() << "\">" << std::endl;
+        out << "</point>" << std::endl;        
+      }            
+
+      out << "</instance>" << std::endl;
+   }
+
+  m_actualName.pop_back();
+
 }
 
 void  HepRepSectionsVisitor::visitPosXYZ(PosXYZ* pos)
