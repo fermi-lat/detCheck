@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: riccardo  Thu Mar  2 07:59:24 PST 2006
+detCheck/src
+
+Modified Files:
+	HepRepSectionsVisitor.cxx HepRepSectionsVisitor.h 
+Log Message:
+Added the rendering of tubes as 20-sided prisms in the HepRep visitor
+
+
+    *
+------------------------------------------------------------
 User: riccardo  Wed Mar  1 08:04:26 PST 2006
 detCheck/src
 
