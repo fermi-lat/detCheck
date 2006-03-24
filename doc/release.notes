@@ -3,6 +3,8 @@
  * Coordinator:  J. Bogart
       EOH
 
+  v1r5   24-Mar-2006  jrb 1.(for Riccardo) support for sphere segment
+                          2. upgrade for CLHEP 1.9.whatever
   v1r4p2  30-Jan-2006 jrb Identify input file in output of overlap checker,
                           dumpIds, and volume summary diagnostics
   v1r4p1   8-Dec-2005 jrb (for Riccardo) Fix to HepRepSectionsVisitor.cxx to
