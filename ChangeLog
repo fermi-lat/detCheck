@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Fri Mar 24 12:20:54 PST 2006
+detCheck/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+upgrade for new CLHEP (1.9.whatever)
+
+    *
+------------------------------------------------------------
 User: riccardo  Thu Mar  2 07:59:24 PST 2006
 detCheck/src
 
