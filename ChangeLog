@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Fri Mar 24 12:20:55 PST 2006
+detCheck/src
+
+Modified Files:
+	HepRepSectionsVisitor.cxx 
+Log Message:
+upgrade for new CLHEP (1.9.whatever)
+
+    *
+------------------------------------------------------------
 User: jrb  Fri Mar 24 12:20:54 PST 2006
 detCheck/cmt
 
