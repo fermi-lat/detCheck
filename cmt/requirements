@@ -1,11 +1,11 @@
 package detCheck
-# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/cmt/requirements,v 1.14 2005/12/08 20:48:15 jrb Exp $
+# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/cmt/requirements,v 1.15 2006/01/31 00:01:24 jrb Exp $
 version v1r4p2
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use detModel v2r*
 use xmlGeoDbs v1r*
-use CLHEP v2r* IExternal
+use CLHEP v3r* IExternal
 use xmlUtil v3r*
 use idents  v2r*
 

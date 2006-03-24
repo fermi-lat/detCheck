@@ -42,7 +42,7 @@ HepRepSectionsVisitor::HepRepSectionsVisitor(std::string nvol)
   //  Manager* manager = Manager::getPointer();
   //  Gdd* g = manager->getGdd();
 
-  HepTransform3D start;
+  HepGeom::Transform3D start;
   m_actualTransform.push_back(start);
   
 };
@@ -136,7 +136,7 @@ void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
       out << "<type name =\"" <<  ensemble->getName() << "\" >" << std::endl;
       if (m_types.size() == 0)
         {
-          Hep3Vector t = m_prefixTransform.getTranslation();
+          CLHEP::Hep3Vector t = m_prefixTransform.getTranslation();
 
           out << "<attvalue name=\"PosTopVolume\" value =\"(" 
               <<  t.x() << ", " 
@@ -156,8 +156,8 @@ void  HepRepSectionsVisitor::visitEnsemble(Ensemble* ensemble)
 
       out << "<attvalue name=\"IDname\" value =\""<< m_idDictionary->getNameSeqString(identifier) << "\" showlabel =\"\"/>" << std::endl;      
 
-      HepTransform3D atr = m_actualTransform.back();
-      Hep3Vector t = atr.getTranslation();
+      HepGeom::Transform3D atr = m_actualTransform.back();
+      CLHEP::Hep3Vector t = atr.getTranslation();
 
       out << "<attvalue name=\"Pos\" value =\"(" 
           <<  t.x() << ", " 
@@ -247,12 +247,12 @@ void  HepRepSectionsVisitor::visitBox(Box* box)
           identifier.append(m_actualID[ii]);
 
       out << "<attvalue name=\"IDname\" value =\""<< m_idDictionary->getNameSeqString(identifier) << "\" showlabel =\"\"/>" << std::endl;      
-      HepPoint3D v(0,0,0);
-      HepPoint3D v1;
+      HepGeom::Point3D<double> v(0,0,0);
+      HepGeom::Point3D<double> v1;
       double dx = box->getX()/2;
       double dy = box->getY()/2;
       double dz = box->getZ()/2;
-      HepTransform3D atr = m_actualTransform.back();
+      HepGeom::Transform3D atr = m_actualTransform.back();
       out << "<attvalue name=\"Pos\" value =\"(" 
           <<  (atr*v).x() << ", " 
           <<  (atr*v).y() << ", " 
@@ -377,14 +377,14 @@ void  HepRepSectionsVisitor::visitTube(Tube* tube)
 
 void  HepRepSectionsVisitor::visitPosXYZ(PosXYZ* pos)
 {
-  HepRotation rot;
+  CLHEP::HepRotation rot;
   rot.rotateX(pos->getXRot()*M_PI/180);
   rot.rotateY(pos->getYRot()*M_PI/180);
   rot.rotateZ(pos->getZRot()*M_PI/180);
 
-  Hep3Vector t(pos->getX(), pos->getY(), pos->getZ());  
-  HepTransform3D tr(rot,t);
-  HepTransform3D atr = (m_actualTransform.back())*tr;
+  CLHEP::Hep3Vector t(pos->getX(), pos->getY(), pos->getZ());  
+  HepGeom::Transform3D tr(rot,t);
+  HepGeom::Transform3D atr = (m_actualTransform.back())*tr;
   unsigned int i;
 
   idents::VolumeIdentifier tempID = m_actualID;
@@ -406,7 +406,7 @@ void  HepRepSectionsVisitor::visitAxisMPos(AxisMPos* pos)
   unsigned int i,j ;
   unsigned int n;
   idents::VolumeIdentifier tempID = m_actualID;
-  HepTransform3D atr;
+  HepGeom::Transform3D atr;
 
   if (m_mode=="type")
     {
@@ -421,27 +421,30 @@ void  HepRepSectionsVisitor::visitAxisMPos(AxisMPos* pos)
         case (Stack::xDir):
           {
             //            HepRotation rot(pos->getRotation()*M_PI/180, 0, 0);
-            HepRotation rot(-pos->getRotation()*M_PI/180, 0, 0);
-            Hep3Vector t(pos->getDx()+pos->getDisp(i), pos->getDy(), pos->getDz());  
-            HepTransform3D tr(rot,t);
+            CLHEP::HepRotation rot(-pos->getRotation()*M_PI/180, 0, 0);
+            CLHEP::Hep3Vector t(pos->getDx()+pos->getDisp(i), pos->getDy(), 
+                                pos->getDz());  
+            HepGeom::Transform3D tr(rot,t);
             atr = (m_actualTransform.back())*tr;
           }
           break;
         case (Stack::yDir):
           {
             //            HepRotation rot(0,pos->getRotation()*M_PI/180, 0);
-            HepRotation rot(0,-pos->getRotation()*M_PI/180, 0);
-            Hep3Vector t(pos->getDx(), pos->getDy()+pos->getDisp(i), pos->getDz());  
-            HepTransform3D tr(rot,t);
+            CLHEP::HepRotation rot(0,-pos->getRotation()*M_PI/180, 0);
+            CLHEP::Hep3Vector t(pos->getDx(), pos->getDy()+pos->getDisp(i), 
+                                pos->getDz());  
+            HepGeom::Transform3D tr(rot,t);
             atr = (m_actualTransform.back())*tr;
           }
           break;
         case (Stack::zDir):
           {
             //            HepRotation rot(0,0,pos->getRotation()*M_PI/180);
-            HepRotation rot(0,0,-pos->getRotation()*M_PI/180);
-            Hep3Vector t(pos->getDx(), pos->getDy(), pos->getDz()+pos->getDisp(i));  
-            HepTransform3D tr(rot,t);
+            CLHEP::HepRotation rot(0,0,-pos->getRotation()*M_PI/180);
+            CLHEP::Hep3Vector t(pos->getDx(), pos->getDy(), 
+                                pos->getDz()+pos->getDisp(i));  
+            HepGeom::Transform3D tr(rot,t);
             atr = (m_actualTransform.back())*tr;
           }
           break;
