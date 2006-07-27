@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Thu Jul 27 15:00:36 PDT 2006
+detCheck/src
+
+Modified Files:
+	Overlaps.cxx 
+Log Message:
+Small improvement to output in case there is an overlap
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v1r5, operation: add
 Package: detCheck
