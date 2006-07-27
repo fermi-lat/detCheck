@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.8 2004/05/11 23:08:02 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.9 2006/01/31 00:00:41 jrb Exp $
 
 #include <fstream>
 #include <cmath>
@@ -28,7 +28,6 @@ namespace detCheck {
   }
 
   bool Overlaps::check(std::string errfileName, bool verbose, bool dump) {
-    //    m_verbose = verbose;
     m_verbose = verbose;
     m_dump = dump;
     bool allocStream = false;
@@ -55,6 +54,7 @@ namespace detCheck {
     
     for (iVol = 0; iVol < nVol; iVol++) {
       bool ok = true;
+      bool childrenPrinted = false;
 
       detModel::Volume *vol = m_gdd->getOrderedVolume(iVol);
       if (detModel::Stack *ens = 
@@ -69,7 +69,10 @@ namespace detCheck {
                    << ", stack volume #" 
                    << nStack << " " 
                    << vol->getName() << std::endl;
-          if (verbose) printChildren(ens);
+          if (verbose) {
+            printChildren(ens);
+            childrenPrinted = true;
+          }
         }
         ++nStack;
       }
@@ -85,9 +88,12 @@ namespace detCheck {
                    << ", Composition volume #" 
                    << nCompos << " " 
                    << vol->getName() << std::endl;
-          if (verbose) printChildren(ens);
+          if (verbose) {
+            printChildren(ens);
+            childrenPrinted = true;
+          }
         }
-        if (m_dump) printChildren(ens);
+        if (m_dump && !childrenPrinted) printChildren(ens);
         ++nCompos;
       }
       finalOk = finalOk & ok;
@@ -249,7 +255,9 @@ namespace detCheck {
 
       locs.push_back(loc);
     }
-    return (checkLocs(locs)  && checkEnvelope(compos, locs));
+    bool locsRet = checkLocs(locs);
+    bool envRet = checkEnvelope(compos, locs);
+    return (locsRet  && envRet);
   }
 
   bool Overlaps::checkLocs(std::vector<Location>& locs) {
