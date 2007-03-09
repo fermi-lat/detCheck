@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.13 2006/01/31 00:00:41 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.14 2006/03/01 16:04:26 riccardo Exp $
 
 #include <cmath>
 #include <cassert>
@@ -344,7 +344,7 @@ namespace detCheck {
     // not the real one
     double rOut = sphere->getRout();
     double rIn = sphere->getRin();
-    double cuVol = PI * (4/3.0) * (rOut * rOut - rIn * rIn);
+    double cuVol = PI * (4/3.0) * (rOut * rOut *rOut - rIn * rIn * rIn);
 
     registerShape(sphere, cuVol);
   }
