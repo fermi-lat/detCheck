@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.9 2006/01/31 00:00:41 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.10 2006/07/27 22:00:36 jrb Exp $
 
 #include <fstream>
 #include <cmath>
@@ -308,7 +308,7 @@ namespace detCheck {
       // locs next
       (*m_out) << "Child positions (min and max corners) " << std::endl;
       for (unsigned iLoc = 0; iLoc < locs.size(); iLoc++) {
-        (*m_out) << "   (" << locs[iLoc].x[0] << ", " << locs[iLoc].y[0] 
+        (*m_out) << "Child volume #" << iLoc << ":   (" << locs[iLoc].x[0] << ", " << locs[iLoc].y[0] 
                  <<  ", "  << locs[iLoc].z[0] << ") and (" 
                  << locs[iLoc].x[1] << ", " << locs[iLoc].y[1] 
                  << ", " << locs[iLoc].z[1] << ")" << std::endl;
