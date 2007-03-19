@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/Overlaps.h,v 1.1.1.1 2002/01/15 22:25:01 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/Overlaps.h,v 1.2 2003/06/27 17:03:56 jrb Exp $
 
 #include <string>
 #include <iostream>
@@ -71,10 +71,33 @@ namespace detCheck {
     void printChildren(detModel::Ensemble *ens);
 
     //! Local class describing locations of two opposite corners
-    //! of a positioned bounding box
+    //! of a positioned bounding box.  Can use in bitmask to
+    //! express multiple rotations
+    enum ROT_DIR {
+      X_ROT = 1,
+      Y_ROT = 2,
+      Z_ROT = 4 };
+
+    class Point {
+    public:
+      double px, py, pz;
+      // Find new coordinates when rotating initPos about the
+      // point in direction dir.  Angle rot is expressed in degrees.
+      // Return false if input is bad (unknown dir)
+      const bool rotAbout(double rot, ROT_DIR dir, 
+                          const Point* initPos, Point* finalPos);
+    };
     class Location {
     public:
-      double x[2], y[2], z[2];
+      double x[2], y[2], z[2]; // orthog. bounding box corners
+      double  rOut, rIn;             // for sphere
+      double  xRot, yRot, zRot;
+      double  xDim, yDim, zDim;  // unrotated box dimensions
+      Point c;
+      Point v[8]; // 8 vertices of a box, in order (before rotation,
+                  // if any) [-x,-y,-z], [-x,-y,+z], [-x, +y, -z] etc.
+      unsigned shapeType;   // 0 for orthog box, 1 for rot box, 2 for sphere
+      Location() : rOut(0), rIn(0), shapeType(0) {};
     };              // end nested Location class
 
     //! Utility invoked to check pairwise for overlaps among
