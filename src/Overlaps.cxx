@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.10 2006/07/27 22:00:36 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.11 2007/03/10 00:37:10 jrb Exp $
 
 #include <fstream>
 #include <cmath>
@@ -12,6 +12,7 @@
 
 #include "detModel/Sections/BoundingBox.h"
 #include "detModel/Sections/Ensemble.h"
+#include "detModel/Sections/Sphere.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/Stack.h"
 #include "detModel/Sections/Box.h"
@@ -26,6 +27,7 @@ namespace detCheck {
     m_gdd = gdd;
     m_eps = DEFAULT_EPSILON;
   }
+
 
   bool Overlaps::check(std::string errfileName, bool verbose, bool dump) {
     m_verbose = verbose;
@@ -121,7 +123,7 @@ namespace detCheck {
       // only possibility for positioning elt. within a stack
       AxisMPos *mpos = dynamic_cast<AxisMPos*>(positions[iPos]);
       BoundingBox* bBox = mpos->getBBox();
-
+      
       // a little extra processing to check that evenly-spaced
       // components don't intersect
       bool ok = checkMPos(mpos);
@@ -227,31 +229,59 @@ namespace detCheck {
     std::vector<Overlaps::Location> locs;
     
       // Step 1 is to look at the child elements one by one,
-    // storing coordinates of extreme corners.
+    // storing coordinates of extreme corners, of bounding box,
+    // and of what type it is (orthog. box, rot. box or spherical shell)
     std::vector<Position *> positions = compos->getPositions();
     for (unsigned int iPos = 0; iPos < positions.size(); iPos++) {
 
       // PosXYZ is the only kind of positioning supported for compositions
       PosXYZ *pos = dynamic_cast<PosXYZ *> (positions[iPos]);
+      Volume *vol = pos->getVolume();
       BoundingBox* bBox = pos->getBBox();
       Location loc;
 
+      loc.c.px = pos->getX();   // center position
+      loc.c.py = pos->getY();
+      loc.c.pz = pos->getZ();
+
+      // Is is a sphere?
+      Sphere *sphere = dynamic_cast<Sphere *> (vol);
+      Box *box = dynamic_cast<Box *> (vol);
+      if (sphere != 0) {
+        loc.shapeType = 2;
+        loc.rOut = sphere->getRout();
+        loc.rIn = sphere->getRin();
+      }
+      else if (box != 0) {
+        loc.xDim = box->getX();
+        loc.yDim = box->getY();
+        loc.zDim = box->getZ();
+      }
+      else { // could be another composition or stack - acts like orthog box
+        loc.shapeType = 0;
+      }
+        
       // Now compute displacements; store result of folding
       // BBox coords with displacement, gap, etc. in locs[iPos]
       double dim2 = (bBox->getXDim()) / 2.0;
-      double dsp = pos->getX();
-      loc.x[0] = -dim2 + dsp;
-      loc.x[1] = dim2 + dsp;
+      //      v[0].px = v[1].px = v[2].px = v[3].px = 
+      loc.x[0]  = -dim2 + loc.c.px;
+      //      v[4].px = v[5].px = v[6].px = v[7].px = 
+      loc.x[1] = dim2 + loc.c.px;
 
       dim2 = (bBox->getYDim()) / 2.0;
-      dsp = pos->getY();
-      loc.y[0] = -dim2 + dsp;
-      loc.y[1] = dim2 + dsp;
+      //      v[0].py = v[1].py = v[4].py = v[5].py = 
+      loc.y[0] = -dim2 + loc.c.py;
+      //      v[2].py = v[3].py = v[6].py = v[7].py = 
+      loc.y[1] = dim2 + loc.c.py;
 
       dim2 = (bBox->getZDim()) / 2.0;
-      dsp = pos->getZ();
-      loc.z[0] = -dim2 + dsp;
-      loc.z[1] = dim2 + dsp;
+      loc.z[0] = -dim2 + loc.c.pz;
+      loc.z[1] = dim2 + loc.c.pz;
+
+      // If it's a box and has a rotation which is not a multiple of
+      // pi/2, bounding box is "too big".  
+
 
       locs.push_back(loc);
     }
@@ -367,5 +397,29 @@ namespace detCheck {
     }
     (*m_out) << std::endl;
     return;
+  }
+
+  const bool Overlaps::Point::rotAbout(double rot, ROT_DIR dir, 
+                                       const Point* initPos, 
+                                       Point* resultPos) {
+    // translate to our local coord.system
+    resultPos->px = initPos->px - px;
+    resultPos->py = initPos->py - py;
+    resultPos->pz = initPos->pz - pz;
+    // Do the rotation
+    switch(dir) {
+    case X_ROT:
+
+    case Y_ROT:
+
+    case Z_ROT:
+    default:
+      break;
+    }
+    // translate back
+    resultPos->px += px;
+    resultPos->py += py;
+    resultPos->pz += pz;
+    return true;
   }
 }
