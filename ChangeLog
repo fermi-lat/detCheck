@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Sun Mar 18 17:49:49 PDT 2007
+detCheck/detCheck
+
+Modified Files:
+	Overlaps.h 
+Log Message:
+Starting adding machinery to handle spheres and angled boxes 
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v1r5p1, operation: add
 Package: detCheck
