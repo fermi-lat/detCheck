@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.12 2007/03/19 00:50:11 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.13 2007/03/24 06:36:09 jrb Exp $
 
 #include <fstream>
 #include <cmath>
@@ -62,7 +62,7 @@ namespace detCheck {
     
     for (iVol = 0; iVol < nVol; iVol++) {
       bool ok = true;
-      bool childrenPrinted = false;
+      m_childrenPrinted = false;
 
       detModel::Volume *vol = m_gdd->getOrderedVolume(iVol);
       if (detModel::Stack *ens = 
@@ -79,7 +79,6 @@ namespace detCheck {
                    << vol->getName() << std::endl;
           if (verbose) {
             printChildren(ens);
-            childrenPrinted = true;
           }
         }
         ++nStack;
@@ -98,10 +97,9 @@ namespace detCheck {
                    << vol->getName() << std::endl;
           if (verbose) {
             printChildren(ens);
-            childrenPrinted = true;
           }
         }
-        if (m_dump && !childrenPrinted) printChildren(ens);
+        if (m_dump && !m_childrenPrinted) printChildren(ens);
         ++nCompos;
       }
       finalOk = finalOk & ok;
@@ -300,12 +298,14 @@ namespace detCheck {
       // locs next
       (*m_out) << "Child positions (min and max corners) " << std::endl;
       for (unsigned iLoc = 0; iLoc < locs.size(); iLoc++) {
-        (*m_out) << "Child volume #" << iLoc << ":   (" << locs[iLoc].xBB[0] 
+        (*m_out) << "Child #" << iLoc << " [" << locs[iLoc].vol->getName()
+                 << "]: (" << locs[iLoc].xBB[0] 
                  << ", " << locs[iLoc].yBB[0] 
-                 <<  ", "  << locs[iLoc].zBB[0] << ") and (" 
+                 <<  ", "  << locs[iLoc].zBB[0] << ") & (" 
                  << locs[iLoc].xBB[1] << ", " << locs[iLoc].yBB[1] 
                  << ", " << locs[iLoc].zBB[1] << ")" << std::endl;
       }
+      m_childrenPrinted = true;
     }
     return retStatus;
   }
@@ -332,15 +332,6 @@ namespace detCheck {
             ( (fabs(loc1->zBB[1]) < m_eps) && (fabs(loc2->zBB[0]) < m_eps) ) );
     }
 
-    if (!ok) {
-      (*m_out) << "Overlapping volumes.  Vertex coords are:" << std::endl;
-      (*m_out) << "1st volume:  (" << loc1->xBB[0] << ", " << loc1->yBB[0] <<
-        ", " << loc1->zBB[0] << ") and (" << loc1->xBB[1] << ", " << loc1->yBB[1] <<
-        ", " << loc1->zBB[1] << ")" << std::endl;
-      (*m_out) << "2nd volume:  (" << loc2->xBB[0] << ", " << loc2->yBB[0] <<
-        ", " << loc2->zBB[0] << ") and (" << loc2->xBB[1] << ", " << loc2->yBB[1] <<
-        ", " << loc2->zBB[1] << ")" << std::endl;
-    }
     if (ok) return ok;
 
     // If not ok, still a chance we have a false positive.
@@ -367,18 +358,35 @@ namespace detCheck {
         sqrt((big->c.px-sml->c.px)*(big->c.px-sml->c.px) +
               (big->c.py-sml->c.py)*(big->c.py-sml->c.py) +
               (big->c.pz-sml->c.pz)*(big->c.pz-sml->c.pz));
-      return(dC + sml->rOut <= big->rIn);
+      ok = (dC + sml->rOut <= big->rIn);
     }
 
     // If one is sphere and one is box..
     if (loc1->shapeType == SHAPEsphere) {
-      return checkSphereBox(loc1, loc2);
+      ok = checkSphereBox(loc1, loc2);
     }
     else if (loc2->shapeType == SHAPEsphere) {
-      return checkSphereBox(loc2, loc1);
+      ok = checkSphereBox(loc2, loc1);
     }
 
-    else return checkBoxes(loc1, loc2);
+    else ok = checkBoxes(loc1, loc2);
+
+    if (!ok) {
+      (*m_out) << "Overlapping volumes.  Vertex coords are:" << std::endl;
+      (*m_out) << "1st vol:  [" << loc1->vol->getName() << "] (" 
+               << loc1->xBB[0] << ", " 
+               << loc1->yBB[0] 
+               << ", " << loc1->zBB[0] << ") & (" << loc1->xBB[1] 
+               << ", " << loc1->yBB[1] <<
+        ", " << loc1->zBB[1] << ")" << std::endl;
+
+      (*m_out) << "2nd vol: [" << loc2->vol->getName() << "] (" 
+               << loc2->xBB[0] << ", " << loc2->yBB[0] 
+               << ", " << loc2->zBB[0] << ") & (" << loc2->xBB[1] 
+               << ", " << loc2->yBB[1] << ", " << loc2->zBB[1] 
+               << ")" << std::endl;
+    }
+    return ok;
 
   }
 
@@ -390,6 +398,7 @@ namespace detCheck {
   }
 
   void Overlaps::printChildren(detModel::Ensemble *ens) {
+    if (m_childrenPrinted) return;
     std::vector<detModel::Position*> positions = ens->getPositions();
     
     for (unsigned int iPos = 0; iPos < positions.size(); iPos++) {
@@ -397,6 +406,7 @@ namespace detCheck {
         positions[iPos]->getVolumeRef() << std::endl;
     }
     (*m_out) << std::endl;
+    m_childrenPrinted = true;
     return;
   }
 
@@ -444,7 +454,7 @@ namespace detCheck {
 
       loc.xRot = pos->getXRot();
       loc.yRot = pos->getYRot();
-      loc.zRot = pos->getYRot();
+      loc.zRot = pos->getZRot();
 
 
       // Vertices of box, not rotated and not displaced 
