@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/Overlaps.h,v 1.3 2007/03/19 00:49:48 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/Overlaps.h,v 1.4 2007/03/24 06:35:46 jrb Exp $
 
 #include <string>
 #include <iostream>
@@ -74,7 +74,7 @@ namespace detCheck {
     double        m_eps;
     bool          m_verbose;
     bool          m_dump;
-
+    bool          m_childrenPrinted;
     class Point {
     public:
       double px, py, pz;
