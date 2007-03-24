@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: jrb  Fri Mar 23 23:35:46 PDT 2007
+detCheck/detCheck
+
+Modified Files:
+	Overlaps.h 
+Log Message:
+save more information per positioned volume for more comprehensive checking
+to avoid some false positives (compiles, but not working yet)
+
+    *
+------------------------------------------------------------
 User: jrb  Sun Mar 18 17:50:11 PDT 2007
 detCheck/src
 
