@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/Overlaps.h,v 1.2 2003/06/27 17:03:56 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/Overlaps.h,v 1.3 2007/03/19 00:49:48 jrb Exp $
 
 #include <string>
 #include <iostream>
@@ -9,6 +9,12 @@
 #include "detModel/Sections/Stack.h"
 #include "detModel/Sections/AxisMPos.h"
 
+namespace detModel {
+  class BoundingBox;
+  class Volume;
+  class PosXYZ;
+}
+
 namespace detCheck {
   /**  This class checks for overlaps among all positioned volumes
        in the given Gdd.  In practice this just means checking that
@@ -16,6 +22,20 @@ namespace detCheck {
 
        For now check all volumes, regardless of choice mode.
   */
+    enum ROT_DIR {
+      NO_ROT = 0,
+      X_ROT = 1,
+      Y_ROT = 2,
+      Z_ROT = 4 };
+
+    enum SHAPE {
+      SHAPEotherShape = 0,
+      SHAPEorthBox = 1,
+      SHAPErotBox = 2,
+      SHAPEsphere = 3
+    };
+
+
   class Overlaps {
   public:
 
@@ -45,6 +65,7 @@ namespace detCheck {
         returns the old value of epsilon. */
     double setEpsilon(double epsilon);
 
+
   private:
     static double DEFAULT_EPSILON;
 
@@ -53,6 +74,60 @@ namespace detCheck {
     double        m_eps;
     bool          m_verbose;
     bool          m_dump;
+
+    class Point {
+    public:
+      double px, py, pz;
+      Point(double x=0,double y=0, double z=0) : px(x), py(y), pz(z) {}
+      /* According to Stroustrup, default assignment and copy constructor
+         will do the right thing
+      Point(const Point& other) : px(other.px), py(other.py), pz(other.pz) {}
+      Point& operator=(const Point& other) {
+        px = other.px; py = other.py; pz = other.pz; return *this;
+      }
+      */
+      Point& operator+=(Point other) {
+        px += other.px; py += other.py; pz+= other.pz; return *this;
+      }
+      Point& operator-=(Point other) {
+        px -= other.px; py -= other.py; pz -= other.pz; return *this;
+      }
+
+      Point operator+(Point b) { 
+        return (*this) += b;
+      }
+
+      Point operator-(Point b) { 
+        return (*this) -= b;
+      }
+
+      static double dist(const Point& a, const Point& b);
+
+      // Find new coordinates when rotating initPos about the
+      // point in direction dir.  Angle rot is expressed in degrees.
+      // Return false if input is bad (unknown dir)
+      //      const bool rotAbout(double rot, ROT_DIR dir, 
+      //                          const Point* initPos, Point* finalPos);
+      static void doRot(double rot, ROT_DIR dir, const Point* initPos,
+                        Point* finalPos);
+    };
+    class Location {
+    public:
+      detModel::BoundingBox* bBox;
+      detModel::Volume* vol;
+      double xBB[2], yBB[2], zBB[2]; // orthog. bounding box corners
+      double  rOut, rIn;             // for sphere
+      ROT_DIR rotDir;
+      double  xRot, yRot, zRot;
+      double  xDim, yDim, zDim;  // unrotated box dimensions
+      Point c;
+      Point v[8]; // 8 vertices of a box, in order (before rotation,
+                  // if any) [-x,-y,-z], [-x,-y,+z], [-x, +y, -z] etc.
+      unsigned shapeType;  // 1 for orth box, 2 for rot box, 3 for sphere,
+                           // 0 for 'other' (e.g. tube, stack)
+      Location() : bBox(0), vol(0), rOut(0), rIn(0), rotDir(NO_ROT), 
+                   shapeType(0) {};
+    };              // end nested Location class
 
     /// Look for overlaps among (1st-generation) children of
     /// a Composition. 
@@ -70,40 +145,19 @@ namespace detCheck {
     /// Used in verbose mode; prints names of all child volumes 
     void printChildren(detModel::Ensemble *ens);
 
+    void fillPos(Location& loc, detModel::PosXYZ *pos);
     //! Local class describing locations of two opposite corners
-    //! of a positioned bounding box.  Can use in bitmask to
-    //! express multiple rotations
-    enum ROT_DIR {
-      X_ROT = 1,
-      Y_ROT = 2,
-      Z_ROT = 4 };
-
-    class Point {
-    public:
-      double px, py, pz;
-      // Find new coordinates when rotating initPos about the
-      // point in direction dir.  Angle rot is expressed in degrees.
-      // Return false if input is bad (unknown dir)
-      const bool rotAbout(double rot, ROT_DIR dir, 
-                          const Point* initPos, Point* finalPos);
-    };
-    class Location {
-    public:
-      double x[2], y[2], z[2]; // orthog. bounding box corners
-      double  rOut, rIn;             // for sphere
-      double  xRot, yRot, zRot;
-      double  xDim, yDim, zDim;  // unrotated box dimensions
-      Point c;
-      Point v[8]; // 8 vertices of a box, in order (before rotation,
-                  // if any) [-x,-y,-z], [-x,-y,+z], [-x, +y, -z] etc.
-      unsigned shapeType;   // 0 for orthog box, 1 for rot box, 2 for sphere
-      Location() : rOut(0), rIn(0), shapeType(0) {};
-    };              // end nested Location class
+    //! of a positioned bounding box. 
 
     //! Utility invoked to check pairwise for overlaps among
     //! a sequence of Locations
     bool checkLocs(std::vector<Location>& locs);
     bool pairOk(Location* loc1, Location* loc2);
+
+    //! Extra checking to eliminate false positives if first loc describes
+    //! sphere, second describes bo
+    const bool checkSphereBox(Location* sphereLoc, Location* boxLoc);
+    const bool checkBoxes(Location* box1Loc, Location* box2Loc);
 
     //! See if all children are inside the envelope (they should be)
     bool checkEnvelope(detModel::Composition*, std::vector<Location>& locs);

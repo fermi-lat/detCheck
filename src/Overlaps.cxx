@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.11 2007/03/10 00:37:10 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.12 2007/03/19 00:50:11 jrb Exp $
 
 #include <fstream>
 #include <cmath>
@@ -20,6 +20,7 @@
 #include "detModel/Sections/AxisMPos.h"
 
 namespace detCheck {
+  static double PI = 0;    // Set properly at first use
 
   //  double Overlaps::DEFAULT_EPSILON = 0.000001;
   double Overlaps::DEFAULT_EPSILON = 0.00001;
@@ -30,6 +31,11 @@ namespace detCheck {
 
 
   bool Overlaps::check(std::string errfileName, bool verbose, bool dump) {
+
+    if (PI <= 0.0) {
+      double one = 1.0;
+      PI = 2 * (asin(one));
+    }
     m_verbose = verbose;
     m_dump = dump;
     bool allocStream = false;
@@ -140,35 +146,35 @@ namespace detCheck {
       // with origin at the vertex of the stack
       Location loc;
 
-      loc.x[0] = mpos->getDx();
+      loc.xBB[0] = mpos->getDx();
       double x = bBox->getXDim(); 
-      loc.x[1] = loc.x[0] + x;
+      loc.xBB[1] = loc.xBB[0] + x;
       
-      loc.y[0] = mpos->getDy(); 
+      loc.yBB[0] = mpos->getDy(); 
       double y = bBox->getYDim();
-      loc.y[1] = loc.y[0] + y;
+      loc.yBB[1] = loc.yBB[0] + y;
 
-      loc.z[0] = mpos->getDz(); 
+      loc.zBB[0] = mpos->getDz(); 
       double z = bBox->getZDim();
-      loc.z[1] = loc.z[0] + z;
+      loc.zBB[1] = loc.zBB[0] + z;
       
       // Now fix up stacking direction
       double cm = mpos->getDispCM();
 
       switch(stack->getAxisDir()) {
       case detModel::Stack::xDir: 
-        loc.x[0] = cm - x/2; 
-        loc.x[1] = cm + x/2;
+        loc.xBB[0] = cm - x/2; 
+        loc.xBB[1] = cm + x/2;
         break;
 
       case detModel::Stack::yDir: 
-        loc.y[0] = cm - y/2; 
-        loc.y[1] = cm + y/2;
+        loc.yBB[0] = cm - y/2; 
+        loc.yBB[1] = cm + y/2;
         break;
 
       case detModel::Stack::zDir: 
-        loc.z[0] = cm - z/2; 
-        loc.z[1] = cm + z/2;
+        loc.zBB[0] = cm - z/2; 
+        loc.zBB[1] = cm + z/2;
         break;
       }
       
@@ -236,52 +242,8 @@ namespace detCheck {
 
       // PosXYZ is the only kind of positioning supported for compositions
       PosXYZ *pos = dynamic_cast<PosXYZ *> (positions[iPos]);
-      Volume *vol = pos->getVolume();
-      BoundingBox* bBox = pos->getBBox();
       Location loc;
-
-      loc.c.px = pos->getX();   // center position
-      loc.c.py = pos->getY();
-      loc.c.pz = pos->getZ();
-
-      // Is is a sphere?
-      Sphere *sphere = dynamic_cast<Sphere *> (vol);
-      Box *box = dynamic_cast<Box *> (vol);
-      if (sphere != 0) {
-        loc.shapeType = 2;
-        loc.rOut = sphere->getRout();
-        loc.rIn = sphere->getRin();
-      }
-      else if (box != 0) {
-        loc.xDim = box->getX();
-        loc.yDim = box->getY();
-        loc.zDim = box->getZ();
-      }
-      else { // could be another composition or stack - acts like orthog box
-        loc.shapeType = 0;
-      }
-        
-      // Now compute displacements; store result of folding
-      // BBox coords with displacement, gap, etc. in locs[iPos]
-      double dim2 = (bBox->getXDim()) / 2.0;
-      //      v[0].px = v[1].px = v[2].px = v[3].px = 
-      loc.x[0]  = -dim2 + loc.c.px;
-      //      v[4].px = v[5].px = v[6].px = v[7].px = 
-      loc.x[1] = dim2 + loc.c.px;
-
-      dim2 = (bBox->getYDim()) / 2.0;
-      //      v[0].py = v[1].py = v[4].py = v[5].py = 
-      loc.y[0] = -dim2 + loc.c.py;
-      //      v[2].py = v[3].py = v[6].py = v[7].py = 
-      loc.y[1] = dim2 + loc.c.py;
-
-      dim2 = (bBox->getZDim()) / 2.0;
-      loc.z[0] = -dim2 + loc.c.pz;
-      loc.z[1] = dim2 + loc.c.pz;
-
-      // If it's a box and has a rotation which is not a multiple of
-      // pi/2, bounding box is "too big".  
-
+      fillPos(loc, pos);
 
       locs.push_back(loc);
     }
@@ -338,10 +300,11 @@ namespace detCheck {
       // locs next
       (*m_out) << "Child positions (min and max corners) " << std::endl;
       for (unsigned iLoc = 0; iLoc < locs.size(); iLoc++) {
-        (*m_out) << "Child volume #" << iLoc << ":   (" << locs[iLoc].x[0] << ", " << locs[iLoc].y[0] 
-                 <<  ", "  << locs[iLoc].z[0] << ") and (" 
-                 << locs[iLoc].x[1] << ", " << locs[iLoc].y[1] 
-                 << ", " << locs[iLoc].z[1] << ")" << std::endl;
+        (*m_out) << "Child volume #" << iLoc << ":   (" << locs[iLoc].xBB[0] 
+                 << ", " << locs[iLoc].yBB[0] 
+                 <<  ", "  << locs[iLoc].zBB[0] << ") and (" 
+                 << locs[iLoc].xBB[1] << ", " << locs[iLoc].yBB[1] 
+                 << ", " << locs[iLoc].zBB[1] << ")" << std::endl;
       }
     }
     return retStatus;
@@ -352,33 +315,71 @@ namespace detCheck {
   bool Overlaps::pairOk(Location* loc1, Location* loc2) {
     // First check takes scale of items to be compared into account
     bool ok = 
-      (loc1->x[0] + m_eps * fabs(loc1->x[0]) >= loc2->x[1]) || 
-      (loc2->x[0] + m_eps * fabs(loc2->x[0])>= loc1->x[1]) ||
-      (loc1->y[0] + m_eps * fabs(loc1->y[0])>= loc2->y[1]) || 
-      (loc2->y[0] + m_eps * fabs(loc2->y[0])>= loc1->y[1]) ||
-      (loc1->z[0] + m_eps * fabs(loc1->z[0])>= loc2->z[1]) || 
-      (loc2->z[0] + m_eps * fabs(loc2->z[0])>= loc1->z[1]);
+      (loc1->xBB[0] + m_eps * fabs(loc1->xBB[0]) >= loc2->xBB[1]) || 
+      (loc2->xBB[0] + m_eps * fabs(loc2->xBB[0])>= loc1->xBB[1]) ||
+      (loc1->yBB[0] + m_eps * fabs(loc1->yBB[0])>= loc2->yBB[1]) || 
+      (loc2->yBB[0] + m_eps * fabs(loc2->yBB[0])>= loc1->yBB[1]) ||
+      (loc1->zBB[0] + m_eps * fabs(loc1->zBB[0])>= loc2->zBB[1]) || 
+      (loc2->zBB[0] + m_eps * fabs(loc2->zBB[0])>= loc1->zBB[1]);
     // However, this sort of comparison can fail if both items are
     // essentially zero, so check for this, too
     if (!ok) {
-      ok = (( (fabs(loc1->x[0]) < m_eps) && (fabs(loc2->x[1]) < m_eps) ) ||
-            ( (fabs(loc1->x[1]) < m_eps) && (fabs(loc2->x[0]) < m_eps) ) ||
-            ( (fabs(loc1->y[0]) < m_eps) && (fabs(loc2->y[1]) < m_eps) ) ||
-            ( (fabs(loc1->y[1]) < m_eps) && (fabs(loc2->y[0]) < m_eps) ) ||
-            ( (fabs(loc1->z[0]) < m_eps) && (fabs(loc2->z[1]) < m_eps) ) ||
-            ( (fabs(loc1->z[1]) < m_eps) && (fabs(loc2->z[0]) < m_eps) ) );
+      ok = (( (fabs(loc1->xBB[0]) < m_eps) && (fabs(loc2->xBB[1]) < m_eps) ) ||
+            ( (fabs(loc1->xBB[1]) < m_eps) && (fabs(loc2->xBB[0]) < m_eps) ) ||
+            ( (fabs(loc1->yBB[0]) < m_eps) && (fabs(loc2->yBB[1]) < m_eps) ) ||
+            ( (fabs(loc1->yBB[1]) < m_eps) && (fabs(loc2->yBB[0]) < m_eps) ) ||
+            ( (fabs(loc1->zBB[0]) < m_eps) && (fabs(loc2->zBB[1]) < m_eps) ) ||
+            ( (fabs(loc1->zBB[1]) < m_eps) && (fabs(loc2->zBB[0]) < m_eps) ) );
     }
 
     if (!ok) {
       (*m_out) << "Overlapping volumes.  Vertex coords are:" << std::endl;
-      (*m_out) << "1st volume:  (" << loc1->x[0] << ", " << loc1->y[0] <<
-        ", " << loc1->z[0] << ") and (" << loc1->x[1] << ", " << loc1->y[1] <<
-        ", " << loc1->z[1] << ")" << std::endl;
-      (*m_out) << "2nd volume:  (" << loc2->x[0] << ", " << loc2->y[0] <<
-        ", " << loc2->z[0] << ") and (" << loc2->x[1] << ", " << loc2->y[1] <<
-        ", " << loc2->z[1] << ")" << std::endl;
+      (*m_out) << "1st volume:  (" << loc1->xBB[0] << ", " << loc1->yBB[0] <<
+        ", " << loc1->zBB[0] << ") and (" << loc1->xBB[1] << ", " << loc1->yBB[1] <<
+        ", " << loc1->zBB[1] << ")" << std::endl;
+      (*m_out) << "2nd volume:  (" << loc2->xBB[0] << ", " << loc2->yBB[0] <<
+        ", " << loc2->zBB[0] << ") and (" << loc2->xBB[1] << ", " << loc2->yBB[1] <<
+        ", " << loc2->zBB[1] << ")" << std::endl;
     }
-    return ok;
+    if (ok) return ok;
+
+    // If not ok, still a chance we have a false positive.
+    // Can't do anything for 'other' shapes
+    if ((loc1->shapeType == SHAPEotherShape) || 
+        (loc2->shapeType == SHAPEotherShape)) return ok;
+
+    // If both shapes were orth boxes, bounding box = shape, so we're done
+    if ((loc1->shapeType == SHAPEorthBox) &&
+        (loc2->shapeType == SHAPEorthBox) ) return ok;
+
+    // If both are spheres, see if one is inside the other
+    if ((loc1->shapeType == SHAPEsphere) &&
+        (loc2->shapeType == SHAPEsphere) ) {
+      Location* big;
+      Location* sml;
+      if (loc1->rOut > loc2->rOut) {
+        big = loc1; sml = loc2;
+      }
+      else {
+        big = loc2; sml = loc1;
+      }
+      double dC = 
+        sqrt((big->c.px-sml->c.px)*(big->c.px-sml->c.px) +
+              (big->c.py-sml->c.py)*(big->c.py-sml->c.py) +
+              (big->c.pz-sml->c.pz)*(big->c.pz-sml->c.pz));
+      return(dC + sml->rOut <= big->rIn);
+    }
+
+    // If one is sphere and one is box..
+    if (loc1->shapeType == SHAPEsphere) {
+      return checkSphereBox(loc1, loc2);
+    }
+    else if (loc2->shapeType == SHAPEsphere) {
+      return checkSphereBox(loc2, loc1);
+    }
+
+    else return checkBoxes(loc1, loc2);
+
   }
 
   double Overlaps::setEpsilon(double epsilon) {
@@ -399,22 +400,300 @@ namespace detCheck {
     return;
   }
 
+  void Overlaps::fillPos(Location& loc, detModel::PosXYZ *pos) {
+    detModel::Volume* vol = pos->getVolume();
+    loc.bBox = pos->getBBox();
+
+    loc.c.px = pos->getX();   // center position
+    loc.c.py = pos->getY();
+    loc.c.pz = pos->getZ();
+
+    detModel::Composition* cmp = dynamic_cast<detModel::Composition *> (vol);
+    if (cmp) {  // replace volume by its envelope
+      vol = cmp->getEnvelope();
+    }
+
+    loc.vol = vol;
+
+    // Get bounding box info for all.  
+    double dim2 = (loc.bBox->getXDim()) / 2.0;
+    loc.xBB[0]  = -dim2 + loc.c.px;
+    loc.xBB[1] = dim2 + loc.c.px;
+    
+    dim2 = (loc.bBox->getYDim()) / 2.0;
+    loc.yBB[0] = -dim2 + loc.c.py;
+    loc.yBB[1] = dim2 + loc.c.py;
+
+    dim2 = (loc.bBox->getZDim()) / 2.0;
+    loc.zBB[0] = -dim2 + loc.c.pz;
+    loc.zBB[1] = dim2 + loc.c.pz;
+
+
+    //Special additional treatment for spheres and boxes
+    detModel::Sphere *sphere = dynamic_cast<detModel::Sphere *> (vol);
+    detModel::Box *box = dynamic_cast<detModel::Box *> (vol);
+    if (sphere != 0) {
+      loc.shapeType = SHAPEsphere;
+      loc.rOut = sphere->getRout();
+      loc.rIn = sphere->getRin();
+    }
+    else if (box != 0) {
+      loc.xDim = box->getX();
+      loc.yDim = box->getY();
+      loc.zDim = box->getZ();
+
+      loc.xRot = pos->getXRot();
+      loc.yRot = pos->getYRot();
+      loc.zRot = pos->getYRot();
+
+
+      // Vertices of box, not rotated and not displaced 
+      loc.v[0] = Point(-loc.xDim/2, -loc.yDim/2, -loc.zDim/2);
+      loc.v[1] = Point(-loc.xDim/2, -loc.yDim/2, loc.zDim/2);
+      loc.v[2] = Point(-loc.xDim/2, loc.yDim/2, -loc.zDim/2);
+      loc.v[3] = Point(-loc.xDim/2, loc.yDim/2, loc.zDim/2);
+      loc.v[4] = Point(loc.xDim/2, -loc.yDim/2, -loc.zDim/2);
+      loc.v[5] = Point(loc.xDim/2, -loc.yDim/2, loc.zDim/2);
+      loc.v[6] = Point(loc.xDim/2, loc.yDim/2, -loc.zDim/2);
+      loc.v[7] = Point(loc.xDim/2, loc.yDim/2, loc.zDim/2);
+
+      loc.shapeType = SHAPEorthBox;
+
+      if ((fabs(fmod(loc.xRot, 90.0)) > 1 )  &&
+          (fabs(fmod(loc.xRot, 90.0)) < 89 ) ) {
+        loc.shapeType = SHAPErotBox;
+        loc.rotDir = X_ROT;
+      } else
+      if ((fabs(fmod(loc.yRot, 90.0)) > 1 ) && 
+          (fabs(fmod(loc.yRot, 90.0)) < 89 ) ) {
+        loc.shapeType = SHAPErotBox;
+        loc.rotDir = Y_ROT;
+      } else
+      if ((fabs(fmod(loc.zRot, 90.0)) > 1 ) && 
+           (fabs(fmod(loc.zRot, 90.0)) < 89 ) )  {
+        loc.shapeType = SHAPErotBox;
+        loc.rotDir = Z_ROT;
+      }
+    }
+    return;
+  }
+
+    //    if box isn't orthog, 
+    //    Consider cases depending on where center of sphere is w.r.t.
+    //    x, y, and z intervals of box.
+    //     *if all three of x, y and z coords of rotated sphere are within
+    //      box, they certainly collide
+    //     *If only two, just need to check distance of center of sphere from
+    //      a single face.  Collide iff sphere intersects this face
+    //     *If only one coord of sphere center is within box, intersection,
+    //      if there is one, occurs with a known edge
+    //     *If none, intersection occurs with a known corner.  Check if
+    //      that corner is within the sphere.
+  const bool Overlaps::checkSphereBox(Location* sphereLoc, Location* boxLoc) {
+    Point sphereC(sphereLoc->c);
+    Point rotC;   // represents sphere center after rotation into box coords
+    bool rotated;
+    if (rotated = (boxLoc->shapeType == SHAPErotBox)) {
+      // adjust rot sphere center into box coords
+      sphereC -= boxLoc->c;
+      double rot;
+      ROT_DIR dir = boxLoc->rotDir;
+
+      switch(dir) {
+      case X_ROT:
+        rot = -boxLoc->xRot;
+        break;
+      case Y_ROT:
+        rot = -boxLoc->yRot;
+        break;
+      case Z_ROT:
+        rot = -boxLoc->zRot;
+        break;
+      case 0:   // shouldn't happen, but if it does nothing to do
+        break;
+      default:
+        // tilt! Probably should throw an exception
+        (*m_out) << "Volume " << boxLoc->vol->getName()
+                 << " has complex rotation direction " << boxLoc->rotDir
+                 << " HELP!" << std::endl;
+        exit(1);
+      }
+      Point::doRot(rot, dir, &sphereC, &rotC);
+    }
+    else rotC = sphereC;
+      
+    // Now see where this center is w.r.t unrotated box
+    // Use original box dimensions for non-orthog box; else
+    // use bounding box dimensions (which are the same, but
+    // may be permuted by rotations of 90 degress)
+    int outside[3] = {0, 0, 0};
+    double halfDim[3];
+    unsigned insideCount = 0;
+    halfDim[0] = 0.5 * ((rotated) ?  boxLoc->xDim : 
+      (boxLoc->xBB[1] - boxLoc->xBB[0]));
+    //    if (inside[0] = ((rotC.px < xHalfDim) && (rotC.px > -xHalfDim)))
+    //      insideCount++;
+    if (rotC.px > halfDim[0]) outside[0] = 1;
+    else if (rotC.px <  -halfDim[0]) outside[0] = -1;
+    else insideCount++;
+
+    halfDim[1] = 0.5 * ((rotated) ? boxLoc->yDim :
+            (boxLoc->yBB[1] - boxLoc->yBB[0]));
+    if (rotC.py > halfDim[1]) outside[1] = 1;
+    else if (rotC.py <  -halfDim[1]) outside[1] = -1;
+    else insideCount++;
+
+    halfDim[2] = 0.5 * ((rotated) ? boxLoc->zDim/2 :
+            (boxLoc->zBB[1] - boxLoc->zBB[0]));
+    if (rotC.pz > halfDim[2]) outside[2] = 1;
+    else if (rotC.pz <  -halfDim[2]) outside[2] = -1;
+    else insideCount++;
+
+    switch (insideCount) {
+    case 3: 
+      return false;
+    case 2: {
+      if (outside[0] != 0) {
+        return (outside[0]*sphereLoc->c.px >= sphereLoc->rOut + halfDim[0]);
+      }
+      else if (outside[1] != 0) {
+        return (outside[1]*sphereLoc->c.py >= sphereLoc->rOut + halfDim[1]);
+      }
+      else if (outside[2] != 0) {
+        return (outside[2]*sphereLoc->c.pz >= sphereLoc->rOut + halfDim[2]);
+      }
+      break;
+    }
+    case 1: // If the sphere intersects the box at all, it must intersect
+      // the nearest edge.  First see if either corner is in sphere
+      {
+        Point corner1;
+        Point corner2;
+        if (!outside[0]) {
+          corner1 = 
+            Point(-halfDim[0], outside[1]*halfDim[1], outside[2]*halfDim[2]);
+          corner2 = 
+            Point(halfDim[0], outside[1]*halfDim[1], outside[2]*halfDim[2]);
+        } else if (!outside[1]) {
+          corner1 = 
+            Point(outside[0]* halfDim[0], -halfDim[1], outside[2]*halfDim[2]);
+          corner2 = 
+            Point(outside[0]*halfDim[0], halfDim[1], outside[2]*halfDim[2]);
+        } else {
+          corner1 = 
+            Point(outside[0]* halfDim[0], outside[1]*halfDim[1], -halfDim[2]);
+          corner2 = 
+            Point(outside[0]*halfDim[0], outside[1]*halfDim[1], halfDim[2]);
+        }
+        if (Point::dist(corner1, sphereLoc->c) < sphereLoc->rOut) return false;
+        if (Point::dist(corner2, sphereLoc->c) < sphereLoc->rOut) return false;
+
+        // only other way volumes can overlap is for sphere boundary to
+        // intersect edge.  See if distance from edge to center of sphere
+        // is < outer radius.  Since edge is || to some axis, relatively
+        // easy to compute distance to it.
+        double toEdgeSq;
+        if (!outside[0])  {        
+          toEdgeSq =  (sphereLoc->c.py - (outside[1]*halfDim[1])) *
+            (sphereLoc->c.py - (outside[1]*halfDim[1]))   +
+            (sphereLoc->c.pz - (outside[2]*halfDim[2])) *
+            (sphereLoc->c.pz - (outside[2]*halfDim[2]));   
+        }
+        else if (!outside[1])  {
+          toEdgeSq =  (sphereLoc->c.px - (outside[0]*halfDim[0])) *
+            (sphereLoc->c.px - (outside[0]*halfDim[0]))   +
+            (sphereLoc->c.pz - (outside[2]*halfDim[2])) *
+            (sphereLoc->c.pz - (outside[2]*halfDim[2]));   
+        }
+        else {
+          toEdgeSq =  (sphereLoc->c.px - (outside[0]*halfDim[0])) *
+            (sphereLoc->c.px - (outside[0]*halfDim[0]))   +
+            (sphereLoc->c.py - (outside[1]*halfDim[1])) *
+            (sphereLoc->c.py - (outside[1]*halfDim[1]));   
+        }
+        return (toEdgeSq >= sphereLoc->rOut * sphereLoc->rOut);
+        break;
+      }
+    case 0: // just check if relevant corner intersects sphere 
+      {
+        Point corner(outside[0]*halfDim[0], outside[1]*halfDim[1], 
+                     outside[2]*halfDim[2]);
+        return Point::dist(corner, sphereLoc->c) >= sphereLoc->rOut;
+      }
+    default:  // nothing else can ever happen; this is silly
+      return false;
+    }
+    return false;
+  } 
+
+  const bool Overlaps::checkBoxes(Location* /* loc1 */, Location* /* loc2 */) {
+    //  TEMPORARY!
+    return false;
+  }
+
+  void  Overlaps::Point::doRot(double rot, ROT_DIR dir, const Point* initPos, 
+                     Point* finalPos) {
+    double x = initPos->px;
+    double y = initPos->py;
+    double z = initPos->pz;
+
+    double rad = (rot*PI)/180.0;
+    switch(dir) {
+    case X_ROT:
+      // rotate in yz plane 
+      finalPos->px = x;
+      finalPos->py = y*cos(rad) - z*sin(rad);
+      finalPos->pz = z*cos(rad) + y*sin(rad);
+      break;
+    case Y_ROT:
+      finalPos->py = y;
+      finalPos->pz = z*cos(rad) - x*sin(rad);
+      finalPos->px = x*cos(rad) + z*sin(rad);
+      break;
+
+    case Z_ROT:
+      finalPos->pz = z;
+      finalPos->px = x*cos(rad) - y*sin(rad);
+      finalPos->py = y*cos(rad) + x*sin(rad);
+      break;
+    default:
+      break;
+    }
+  }
+  double Overlaps::Point::dist(const Point& a, const Point& b) {
+    return sqrt((a.px - b.px)*(a.px - b.px) + (a.py - b.py)*(a.py - b.py) + 
+                (a.pz - b.pz)*(a.pz - b.pz));
+  }
+  /*
   const bool Overlaps::Point::rotAbout(double rot, ROT_DIR dir, 
                                        const Point* initPos, 
                                        Point* resultPos) {
     // translate to our local coord.system
-    resultPos->px = initPos->px - px;
-    resultPos->py = initPos->py - py;
-    resultPos->pz = initPos->pz - pz;
+    double x = initPos->px - px;
+    double y = initPos->py - py;
+    double z = initPos->pz - pz;
+    double rad = rot*PI/180.0;
+
     // Do the rotation
     switch(dir) {
     case X_ROT:
-
+      // rotate in yz plane 
+      resultPos->px = x;
+      resultPos->py = y*cos(rad) - z*sin(rad);
+      resultPos->pz = z*cos(rad) + y*sin(rad);
+      break;
     case Y_ROT:
+      resultPos->py = y;
+      resultPos->pz = z*cos(rad) - x*sin(rad);
+      resultPos->px = x*cos(rad) + z*sin(rad);
+      break;
 
     case Z_ROT:
-    default:
+      resultPos->pz = z;
+      resultPos->px = x*cos(rad) - y*sin(rad);
+      resultPos->py = y*cos(rad) + x*sin(rad);
       break;
+    default:
     }
     // translate back
     resultPos->px += px;
@@ -422,4 +701,5 @@ namespace detCheck {
     resultPos->pz += pz;
     return true;
   }
+  */
 }
