@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: jrb  Fri Mar 23 23:36:09 PDT 2007
+detCheck/src
+
+Modified Files:
+	Overlaps.cxx 
+Log Message:
+save more information per positioned volume for more comprehensive checking
+to avoid some false positives (compiles, but not working yet)
+
+    *
+------------------------------------------------------------
 User: jrb  Fri Mar 23 23:35:46 PDT 2007
 detCheck/detCheck
 
