@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/Overlaps.h,v 1.4 2007/03/24 06:35:46 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/Overlaps.h,v 1.5 2007/03/24 08:07:13 jrb Exp $
 
 #include <string>
 #include <iostream>
@@ -26,7 +26,7 @@ namespace detCheck {
       NO_ROT = 0,
       X_ROT = 1,
       Y_ROT = 2,
-      Z_ROT = 4 };
+      Z_ROT = 3 };
 
     enum SHAPE {
       SHAPEotherShape = 0,
@@ -129,6 +129,11 @@ namespace detCheck {
                    shapeType(0) {};
     };              // end nested Location class
 
+    class BB {
+    public:
+      double xBB[2], yBB[2], zBB[2];
+    };
+
     /// Look for overlaps among (1st-generation) children of
     /// a Composition. 
     bool checkComposition(detModel::Composition* );
@@ -145,6 +150,12 @@ namespace detCheck {
     /// Used in verbose mode; prints names of all child volumes 
     void printChildren(detModel::Ensemble *ens);
 
+    // Fill BB structure from corresponding files in a Location
+    void fillBBFromLocation(Location* loc, BB* bb);
+
+    // Fill a bounding box by giving it dimensions and a center
+    void makeBB(double x, double y, double z, Point& p, BB& bb); 
+
     void fillPos(Location& loc, detModel::PosXYZ *pos);
     //! Local class describing locations of two opposite corners
     //! of a positioned bounding box. 
@@ -154,6 +165,7 @@ namespace detCheck {
     bool checkLocs(std::vector<Location>& locs);
     bool pairOk(Location* loc1, Location* loc2);
 
+    bool Overlaps::checkBB(BB& bb1, BB& bb2);
     //! Extra checking to eliminate false positives if first loc describes
     //! sphere, second describes bo
     const bool checkSphereBox(Location* sphereLoc, Location* boxLoc);
