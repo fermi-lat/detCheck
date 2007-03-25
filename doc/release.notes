@@ -3,9 +3,12 @@
  * Coordinator:  J. Bogart
       EOH
 
-  v1r5p1   9-Mar-2007  jrb 1. Bug fix for summary diagnostic: compute 
-                              sphere volume properly
-                           2. Improve overlap checker output slightly
+  v1r6   25-Mar-2007 jrb Improvements to overlap checker for checking pairs
+                         of spherical shells, sphere + box, and two boxes,
+                         both with same rotation
+  v1r5p1  9-Mar-2007 jrb 1. Bug fix for summary diagnostic: compute 
+                            sphere volume properly
+                         2. Improve overlap checker output slightly
   v1r5   24-Mar-2006  jrb 1.(for Riccardo) support for sphere segment
                           2. upgrade for CLHEP 1.9.whatever
   v1r4p2  30-Jan-2006 jrb Identify input file in output of overlap checker,
