@@ -1,4 +1,16 @@
 ------------------------------------------------------------
+User: jrb  Sun Mar 25 00:30:58 PDT 2007
+detCheck/detCheck
+
+Modified Files:
+	Overlaps.h 
+Log Message:
+Handle case of two boxes not lined up with axes, but lined up with
+each other (e.g. primary structure corner piece and adjacent skirt 
+corner piece)
+
+    *
+------------------------------------------------------------
 User: jrb  Sat Mar 24 19:33:47 PDT 2007
 detCheck/src
 
