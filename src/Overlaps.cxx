@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.13 2007/03/24 06:36:09 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.14 2007/03/24 08:07:13 jrb Exp $
 
 #include <fstream>
 #include <cmath>
@@ -564,13 +564,13 @@ namespace detCheck {
       return false;
     case 2: {
       if (outside[0] != 0) {
-        return (outside[0]*sphereLoc->c.px >= sphereLoc->rOut + halfDim[0]);
+        return (outside[0]*rotC.px >= sphereLoc->rOut + halfDim[0]);
       }
       else if (outside[1] != 0) {
-        return (outside[1]*sphereLoc->c.py >= sphereLoc->rOut + halfDim[1]);
+        return (outside[1]*rotC.py >= sphereLoc->rOut + halfDim[1]);
       }
       else if (outside[2] != 0) {
-        return (outside[2]*sphereLoc->c.pz >= sphereLoc->rOut + halfDim[2]);
+        return (outside[2]*rotC.pz >= sphereLoc->rOut + halfDim[2]);
       }
       break;
     }
@@ -595,8 +595,8 @@ namespace detCheck {
           corner2 = 
             Point(outside[0]*halfDim[0], outside[1]*halfDim[1], halfDim[2]);
         }
-        if (Point::dist(corner1, sphereLoc->c) < sphereLoc->rOut) return false;
-        if (Point::dist(corner2, sphereLoc->c) < sphereLoc->rOut) return false;
+        if (Point::dist(corner1, rotC) < sphereLoc->rOut) return false;
+        if (Point::dist(corner2, rotC) < sphereLoc->rOut) return false;
 
         // only other way volumes can overlap is for sphere boundary to
         // intersect edge.  See if distance from edge to center of sphere
@@ -604,22 +604,22 @@ namespace detCheck {
         // easy to compute distance to it.
         double toEdgeSq;
         if (!outside[0])  {        
-          toEdgeSq =  (sphereLoc->c.py - (outside[1]*halfDim[1])) *
-            (sphereLoc->c.py - (outside[1]*halfDim[1]))   +
-            (sphereLoc->c.pz - (outside[2]*halfDim[2])) *
-            (sphereLoc->c.pz - (outside[2]*halfDim[2]));   
+          toEdgeSq =  (rotC.py - (outside[1]*halfDim[1])) *
+            (rotC.py - (outside[1]*halfDim[1]))   +
+            (rotC.pz - (outside[2]*halfDim[2])) *
+            (rotC.pz - (outside[2]*halfDim[2]));   
         }
         else if (!outside[1])  {
-          toEdgeSq =  (sphereLoc->c.px - (outside[0]*halfDim[0])) *
-            (sphereLoc->c.px - (outside[0]*halfDim[0]))   +
-            (sphereLoc->c.pz - (outside[2]*halfDim[2])) *
-            (sphereLoc->c.pz - (outside[2]*halfDim[2]));   
+          toEdgeSq =  (rotC.px - (outside[0]*halfDim[0])) *
+            (rotC.px - (outside[0]*halfDim[0]))   +
+            (rotC.pz - (outside[2]*halfDim[2])) *
+            (rotC.pz - (outside[2]*halfDim[2]));   
         }
         else {
-          toEdgeSq =  (sphereLoc->c.px - (outside[0]*halfDim[0])) *
-            (sphereLoc->c.px - (outside[0]*halfDim[0]))   +
-            (sphereLoc->c.py - (outside[1]*halfDim[1])) *
-            (sphereLoc->c.py - (outside[1]*halfDim[1]));   
+          toEdgeSq =  (rotC.px - (outside[0]*halfDim[0])) *
+            (rotC.px - (outside[0]*halfDim[0]))   +
+            (rotC.py - (outside[1]*halfDim[1])) *
+            (rotC.py - (outside[1]*halfDim[1]));   
         }
         return (toEdgeSq >= sphereLoc->rOut * sphereLoc->rOut);
         break;
@@ -628,7 +628,7 @@ namespace detCheck {
       {
         Point corner(outside[0]*halfDim[0], outside[1]*halfDim[1], 
                      outside[2]*halfDim[2]);
-        return Point::dist(corner, sphereLoc->c) >= sphereLoc->rOut;
+        return Point::dist(corner, rotC) >= sphereLoc->rOut;
       }
     default:  // nothing else can ever happen; this is silly
       return false;
