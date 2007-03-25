@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.14 2007/03/24 08:07:13 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/Overlaps.cxx,v 1.15 2007/03/25 02:33:47 jrb Exp $
 
 #include <fstream>
 #include <cmath>
@@ -314,23 +314,10 @@ namespace detCheck {
   // y[0] < y[1] etc.
   bool Overlaps::pairOk(Location* loc1, Location* loc2) {
     // First check takes scale of items to be compared into account
-    bool ok = 
-      (loc1->xBB[0] + m_eps * fabs(loc1->xBB[0]) >= loc2->xBB[1]) || 
-      (loc2->xBB[0] + m_eps * fabs(loc2->xBB[0])>= loc1->xBB[1]) ||
-      (loc1->yBB[0] + m_eps * fabs(loc1->yBB[0])>= loc2->yBB[1]) || 
-      (loc2->yBB[0] + m_eps * fabs(loc2->yBB[0])>= loc1->yBB[1]) ||
-      (loc1->zBB[0] + m_eps * fabs(loc1->zBB[0])>= loc2->zBB[1]) || 
-      (loc2->zBB[0] + m_eps * fabs(loc2->zBB[0])>= loc1->zBB[1]);
-    // However, this sort of comparison can fail if both items are
-    // essentially zero, so check for this, too
-    if (!ok) {
-      ok = (( (fabs(loc1->xBB[0]) < m_eps) && (fabs(loc2->xBB[1]) < m_eps) ) ||
-            ( (fabs(loc1->xBB[1]) < m_eps) && (fabs(loc2->xBB[0]) < m_eps) ) ||
-            ( (fabs(loc1->yBB[0]) < m_eps) && (fabs(loc2->yBB[1]) < m_eps) ) ||
-            ( (fabs(loc1->yBB[1]) < m_eps) && (fabs(loc2->yBB[0]) < m_eps) ) ||
-            ( (fabs(loc1->zBB[0]) < m_eps) && (fabs(loc2->zBB[1]) < m_eps) ) ||
-            ( (fabs(loc1->zBB[1]) < m_eps) && (fabs(loc2->zBB[0]) < m_eps) ) );
-    }
+    BB bb1, bb2;
+    fillBBFromLocation(loc1, &bb1);
+    fillBBFromLocation(loc2, &bb2);
+    bool ok = checkBB(bb1, bb2);
 
     if (ok) return ok;
 
@@ -636,9 +623,38 @@ namespace detCheck {
     return false;
   } 
 
-  const bool Overlaps::checkBoxes(Location* /* loc1 */, Location* /* loc2 */) {
-    //  TEMPORARY!
-    return false;
+  const bool Overlaps::checkBoxes(Location*  loc1, Location* loc2) {
+    // One simple thing to try is to see if rotations are the same
+    // (sort of; not so easy since they're floating point numbers)
+    //  If so, ignore them and compare unrotated (but still displaced)
+    // boxes instead
+    // For now, give up immediately otherwise
+    if (loc1->rotDir != loc2->rotDir) return false; 
+    
+    double rotDiff;
+    double rotMag;
+    switch(loc1->rotDir) {
+    case X_ROT: 
+      rotDiff = fabs(loc1->xRot - loc2->xRot); rotMag = loc1->xRot;
+      break;
+    case Y_ROT: 
+      rotDiff = fabs(loc1->yRot - loc2->yRot); rotMag = loc1->yRot;
+      break;
+    case Z_ROT: 
+      rotDiff = fabs(loc1->zRot - loc2->zRot); rotMag = loc1->zRot;
+      break;
+    case NO_ROT: rotDiff = 0;  break;    // shouldn't happen, but no harm in it
+    }
+    if (rotDiff > m_eps) return false;
+
+    // Make up fake bounding boxes.  Unrotate centers to get new centers
+    BB bb1, bb2;
+    Point unRot1, unRot2;
+    Point::doRot(-rotMag, loc1->rotDir, &loc1->c, &unRot1);
+    Point::doRot(-rotMag, loc1->rotDir, &loc2->c, &unRot2);
+    makeBB(loc1->xDim, loc1->yDim, loc1->zDim, unRot1, bb1);
+    makeBB(loc2->xDim, loc2->yDim, loc2->zDim, unRot2, bb2);
+    return checkBB(bb1, bb2);
   }
 
   void  Overlaps::Point::doRot(double rot, ROT_DIR dir, const Point* initPos, 
@@ -674,42 +690,39 @@ namespace detCheck {
     return sqrt((a.px - b.px)*(a.px - b.px) + (a.py - b.py)*(a.py - b.py) + 
                 (a.pz - b.pz)*(a.pz - b.pz));
   }
-  /*
-  const bool Overlaps::Point::rotAbout(double rot, ROT_DIR dir, 
-                                       const Point* initPos, 
-                                       Point* resultPos) {
-    // translate to our local coord.system
-    double x = initPos->px - px;
-    double y = initPos->py - py;
-    double z = initPos->pz - pz;
-    double rad = rot*PI/180.0;
-
-    // Do the rotation
-    switch(dir) {
-    case X_ROT:
-      // rotate in yz plane 
-      resultPos->px = x;
-      resultPos->py = y*cos(rad) - z*sin(rad);
-      resultPos->pz = z*cos(rad) + y*sin(rad);
-      break;
-    case Y_ROT:
-      resultPos->py = y;
-      resultPos->pz = z*cos(rad) - x*sin(rad);
-      resultPos->px = x*cos(rad) + z*sin(rad);
-      break;
-
-    case Z_ROT:
-      resultPos->pz = z;
-      resultPos->px = x*cos(rad) - y*sin(rad);
-      resultPos->py = y*cos(rad) + x*sin(rad);
-      break;
-    default:
+  bool Overlaps::checkBB(BB& bb1, BB& bb2) {
+    bool ok = 
+      (bb1.xBB[0] + m_eps * fabs(bb1.xBB[0]) >= bb2.xBB[1]) || 
+      (bb2.xBB[0] + m_eps * fabs(bb2.xBB[0])>= bb1.xBB[1]) ||
+      (bb1.yBB[0] + m_eps * fabs(bb1.yBB[0])>= bb2.yBB[1]) || 
+      (bb2.yBB[0] + m_eps * fabs(bb2.yBB[0])>= bb1.yBB[1]) ||
+      (bb1.zBB[0] + m_eps * fabs(bb1.zBB[0])>= bb2.zBB[1]) || 
+      (bb2.zBB[0] + m_eps * fabs(bb2.zBB[0])>= bb1.zBB[1]);
+    // However, this sort of comparison can fail if both items are
+    // essentially zero, so check for this, too
+    if (!ok) {
+      ok = (( (fabs(bb1.xBB[0]) < m_eps) && (fabs(bb2.xBB[1]) < m_eps) ) ||
+            ( (fabs(bb1.xBB[1]) < m_eps) && (fabs(bb2.xBB[0]) < m_eps) ) ||
+            ( (fabs(bb1.yBB[0]) < m_eps) && (fabs(bb2.yBB[1]) < m_eps) ) ||
+            ( (fabs(bb1.yBB[1]) < m_eps) && (fabs(bb2.yBB[0]) < m_eps) ) ||
+            ( (fabs(bb1.zBB[0]) < m_eps) && (fabs(bb2.zBB[1]) < m_eps) ) ||
+            ( (fabs(bb1.zBB[1]) < m_eps) && (fabs(bb2.zBB[0]) < m_eps) ) );
     }
-    // translate back
-    resultPos->px += px;
-    resultPos->py += py;
-    resultPos->pz += pz;
-    return true;
+    return ok;
   }
-  */
+  void Overlaps::fillBBFromLocation(Location* loc, BB* bb) {
+    bb->xBB[0]=loc->xBB[0];  bb->xBB[1]=loc->xBB[1]; 
+    bb->yBB[0]=loc->yBB[0];  bb->yBB[1]=loc->yBB[1]; 
+    bb->zBB[0]=loc->zBB[0];  bb->zBB[1]=loc->zBB[1]; 
+  }
+
+  void Overlaps::makeBB(double x, double y, double z, Point& center, BB& bb) {
+    // More convenient to have half-dimensions
+    x = x/2; y = y/2; z = z/2;
+    bb.xBB[0] = center.px - x;     bb.xBB[1] = center.px + x;
+    bb.yBB[0] = center.py - y;     bb.yBB[1] = center.py + y;
+    bb.zBB[0] = center.pz - z;     bb.zBB[1] = center.pz + z;
+    return;
+  }
+
 }
