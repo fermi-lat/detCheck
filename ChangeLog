@@ -1,4 +1,15 @@
 ------------------------------------------------------------
+User: jrb  Tue Apr 17 22:26:21 PDT 2007
+detCheck/src
+
+Modified Files:
+	Overlaps.cxx 
+Log Message:
+Bug fixes for a) sphere and box [always move sphere into box coord. system]
+b) two spherical shells [don't forget 'else' ]
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v1r6, operation: add
 Package: detCheck
