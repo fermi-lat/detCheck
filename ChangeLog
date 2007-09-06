@@ -1,4 +1,16 @@
 ------------------------------------------------------------
+User: jrb  Wed Sep  5 17:34:34 PDT 2007
+detCheck/src
+
+Modified Files:
+	dumpIds.cxx 
+Log Message:
+1.  Output all three Euler angles for rotated volumes
+2.  Add ability to direct all output to std::cout (type an underscore
+    for 2nd argument rather than a file path)
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v1r6p1, operation: add
 Package: detCheck
