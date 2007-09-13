@@ -3,6 +3,8 @@
  * Coordinator:  J. Bogart
       EOH
 
+  v1r6p2 12-Sep-2007 jrb In dumpIds 1) Output all 3 Euler angles 2) write all 
+                         output to stdout if 2nd arg is _  (underscore)
   v1r6p1 17-Apr-2007 jrb Fix a couple bugs having to do with spheres in
                          overlap checker
   v1r6   25-Mar-2007 jrb Improvements to overlap checker for checking pairs
