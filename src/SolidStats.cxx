@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.15 2007/03/09 00:32:38 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.16 2007/03/09 02:09:09 jrb Exp $
 
 #include <cmath>
 #include <cassert>
@@ -82,8 +82,9 @@ namespace detCheck {
       (*m_out) << "<table cellpadding='3' border='1'>" << std::endl;
       (*m_out) << "<tr bgcolor='#c0ffc0' align ='left'>";
       (*m_out) << "<th>Material Name</th><th># Log. Vol.</th>";
-      (*m_out) << "<th># Phys. Vol.</th><th>Volume (cubic cm)</th>";
-      (*m_out) << "<th>Mass (grams)</th></tr>" 
+      (*m_out) << "<th># Phys. Vol.</th><th>Volume (cm3)</th>";
+      (*m_out) << "<th>Mass (g)</th>" ;
+      (*m_out) << "<th>Density (g/cm3)</th></tr>"
                << std::endl;
     }
     else {  // just title
@@ -117,7 +118,8 @@ namespace detCheck {
                  << mat->logCount << "</td><td align='right'>" 
                  << mat->physCount << "</td><td align='right'>" 
                  << intVol << "</td><td align='right'>"
-                 << intMass
+                 << intMass << "</td><td align='right'>"
+                 << mat->density  
                  << "</td></tr>" << std::endl;
       }
       else {
@@ -125,7 +127,9 @@ namespace detCheck {
                  << "  #Log = " << mat->logCount
                  << "  #Phys = " << mat->physCount 
                  << "  Total volume = " << intVol << " cu cm" 
-                 << "  Mass = " <<  intMass << " gm " << std::endl;
+                 << "  Mass = " <<  intMass << " g" 
+                 << "  Density = " << mat->density << " g/cm3"
+                 << std::endl;
       }
     }
 
@@ -137,15 +141,15 @@ namespace detCheck {
                << logCount << "</b></td><td align='right'><b>" << physCount 
                << "</b></td><td align='right'><b>" << intVolTotal 
                << "</b></td><td align='right'><b>" 
-               << massTotal << "</b></td>";
+               << massTotal << "</b></td><td></td>";
  
       (*m_out) << "</table><h2 align='center'>Summary by Logical Volume</h2>"
                << "<table cellpadding='3' border='1'>" 
                << "<tr bgcolor='#c0ffc0' align='left'>" << std::endl;
-      (*m_out) << "<th>Name</th><th>Volume (cu cm)</th><th>Convex vol</th>"
+      (*m_out) << "<th>Name</th><th>Volume (cm3)</th><th>Convex vol</th>"
                << "<th> # Phys.</th>"
                << "<th>Total volume</th><th>Material</th>"
-               << "<th>Mass (grams)</th></tr>" << std::endl;
+               << "<th>Mass (g)</th>" << std::endl;
     
       for (LogVolMapIt logIt = m_logVols.begin(); logIt != m_logVols.end();
            ++logIt) {
@@ -164,7 +168,7 @@ namespace detCheck {
                  << "</td><td align='right'>" 
                  << log->nCopy << "</td><td align='right'>" << intTotalVol
                  << "</td><td>" << log->matName << "</td><td align='right'>"
-                 <<  intMass << "</td></tr>" 
+                 <<  intMass << "</td></tr>"
                  << std::endl;
       }
       (*m_out) << "</table>" << std::endl;
