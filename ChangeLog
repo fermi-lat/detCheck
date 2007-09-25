@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: lsrea  Tue Sep 25 14:58:31 PDT 2007
+detCheck/src
+
+Modified Files:
+	SolidStats.cxx 
+Log Message:
+Add density to summary materials table
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: v1r6p2, operation: add
 Package: detCheck
