@@ -1,4 +1,17 @@
 ------------------------------------------------------------
+User: jrb  Fri Oct 26 12:29:42 PDT 2007
+detCheck/src
+
+Modified Files:
+	HepRepSectionsVisitor.cxx HepRepSectionsVisitor.h 
+	SolidStats.cxx mainpage.h 
+Log Message:
+1. Support for trapezoidal prisms
+2. Eliminate some compile warnings
+3. Improve doc for call interface for dumpIds
+
+    *
+------------------------------------------------------------
 User: jrb  Fri Oct 26 12:29:41 PDT 2007
 detCheck/detCheck
 
