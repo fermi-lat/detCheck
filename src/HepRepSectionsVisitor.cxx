@@ -15,6 +15,7 @@
 #include "detModel/Gdd.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Trap.h"
 #include "detModel/Sections/Composition.h"
 #include "detModel/Sections/PosXYZ.h"
 #include "detModel/Sections/Stack.h"
@@ -272,16 +273,20 @@ void  HepRepSectionsVisitor::visitBox(Box* box)
       out << "</point>" << std::endl;
 
       v.setX(dx); v.setY(dy); v.setZ(-dz); v1 = (atr*v);
-      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() << "\" z = \"" << v1.z() << "\">" << std::endl;
+      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() << "\" z = \"" 
+          << v1.z() << "\">" << std::endl;
       out << "</point>" << std::endl;
       v.setX(-dx); v.setY(dy); v.setZ(-dz); v1 = (atr*v);
-      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() << "\" z = \"" << v1.z() << "\">" << std::endl;
+      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() << "\" z = \"" 
+          << v1.z() << "\">" << std::endl;
       out << "</point>" << std::endl;
       v.setX(-dx); v.setY(-dy); v.setZ(-dz); v1 = (atr*v);
-      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() << "\" z = \"" << v1.z() << "\">" << std::endl;
+      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() << "\" z = \"" 
+          << v1.z() << "\">" << std::endl;
       out << "</point>" << std::endl;
       v.setX(dx); v.setY(-dy); v.setZ(-dz); v1 = (atr*v);
-      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() << "\" z = \"" << v1.z() << "\">" << std::endl;
+      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() << "\" z = \"" 
+          << v1.z() << "\">" << std::endl;
       out << "</point>" << std::endl;
 
       out << "</instance>" << std::endl;
@@ -304,6 +309,114 @@ void  HepRepSectionsVisitor::visitBox(Box* box)
   */
 }
 
+void  HepRepSectionsVisitor::visitTrap(Trap* trap)
+{
+  m_actualName.push_back(trap->getName());
+
+  typedef std::map<std::string, Color*> M;
+  M::const_iterator j; 
+
+  j = colorsMap.find(trap->getMaterial());
+  if (j == colorsMap.end()) return;
+  double x = (trap->getX1() + trap->getX2())/2;
+  double y = trap->getY();
+  double z = trap->getZ();
+
+  //  x = 0.5 * (trap->getX1() + trap->getX2());
+  if (m_mode == "type")
+    {
+      out << "<type name =\"" <<  trap->getName() << "\" >" << std::endl;
+      out << "<attvalue name=\"DrawAs\" value =\"Prism\" showlabel =\"\"/>" 
+          << std::endl;
+      out << "<attvalue name=\"Material\" value =\""<< trap->getMaterial() 
+          << "\" showlabel =\"\"/>" << std::endl;
+      out << "<attvalue name=\"Dim\" value =\"(" 
+          <<  x << ", " 
+          <<  y << ", " 
+          <<  z << ")\" showlabel =\"\"/>" << std::endl;
+
+      out << "<attvalue name=\"Color\" value =\"" <<
+        j->second->getRed() << "," <<
+        j->second->getGreen() << "," <<
+        j->second->getBlue() << "\" showlabel =\"\"/>" << std::endl;      
+      
+      out << "<attvalue name=\"Sensitive\" value =\""<< trap->getSensitive() 
+          << "\" showlabel =\"\"/>" << std::endl;
+      out << "</type>" << std::endl;
+      m_types.push_back(trap->getName());
+    }
+  else
+    {
+      // Here we build the full qualified Name of the Type
+      out << "<instance type=\"" << getFullName()  << "\">" << std::endl;
+      out << "<attvalue name=\"ID\" value =\""<< m_actualID.name() 
+          << "\" showlabel =\"\"/>" << std::endl;
+      xmlUtil::Identifier identifier;
+      for(int ii=0;ii<m_actualID.size();ii++)
+        identifier.append(m_actualID[ii]);
+
+      out << "<attvalue name=\"IDname\" value =\""
+          << m_idDictionary->getNameSeqString(identifier) 
+          << "\" showlabel =\"\"/>" << std::endl;      
+      // (x,y) components of vertices in local coords are
+      //   ( halfTop + halfDiff, y/2),
+      //   (-halfTop + halfDiff, y/2)
+      //    (-halfBot - halfDiff, -y/2)
+      //   (halfBot - halfDiff, -y/2),
+      HepGeom::Point3D<double> v(0,0,0);
+      HepGeom::Point3D<double> v1;
+
+      double halfBotX = trap->getX1()/2;
+      double halfTopX = trap->getX2()/2;
+      double halfDiff = trap->getXDiff()/2;
+      double dy = y/2;
+      double dz = z/2;
+      HepGeom::Transform3D atr = m_actualTransform.back();
+      out << "<attvalue name=\"Pos\" value =\"(" 
+          <<  (atr*v).x() << ", " 
+          <<  (atr*v).y() << ", " 
+          <<  (atr*v).z() << ")\" showlabel =\"\"/>" << std::endl;
+
+      v.setX(halfTopX+halfDiff); v.setY(dy); v.setZ(dz); v1 = (atr*v);
+      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() 
+          << "\" z = \"" << v1.z() << "\">" << std::endl;
+      out << "</point>" << std::endl;
+      v.setX(-halfTopX+halfDiff); v.setY(dy); v.setZ(dz); v1 = (atr*v);
+      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() 
+          << "\" z = \"" << v1.z() << "\">" << std::endl;
+      out << "</point>" << std::endl; 
+     v.setX(-halfBotX-halfDiff); v.setY(-dy); v.setZ(dz); v1 = (atr*v);
+      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() 
+          << "\" z = \"" << v1.z() << "\">" << std::endl;
+      out << "</point>" << std::endl;
+      v.setX(halfBotX-halfDiff); v.setY(-dy); v.setZ(dz); v1 = (atr*v);
+      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() 
+          << "\" z = \"" << v1.z() << "\">" << std::endl;
+      out << "</point>" << std::endl;
+
+      v.setX(halfTopX+halfDiff); v.setY(dy); v.setZ(-dz); v1 = (atr*v);
+      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() 
+          << "\" z = \"" << v1.z() << "\">" << std::endl;
+      out << "</point>" << std::endl;
+      v.setX(-halfTopX+halfDiff); v.setY(dy); v.setZ(-dz); v1 = (atr*v);
+      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() 
+          << "\" z = \"" << v1.z() << "\">" << std::endl;
+      out << "</point>" << std::endl; 
+     v.setX(-halfBotX-halfDiff); v.setY(-dy); v.setZ(-dz); v1 = (atr*v);
+      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() 
+          << "\" z = \"" << v1.z() << "\">" << std::endl;
+      out << "</point>" << std::endl;
+      v.setX(halfBotX-halfDiff); v.setY(-dy); v.setZ(-dz); v1 = (atr*v);
+      out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() 
+          << "\" z = \"" << v1.z() << "\">" << std::endl;
+      out << "</point>" << std::endl;
+
+      out << "</instance>" << std::endl;
+   }
+  m_actualName.pop_back();
+}
+
+
 void  HepRepSectionsVisitor::visitTube(Tube* tube)
 {
   m_actualName.push_back(tube->getName());
@@ -317,8 +430,10 @@ void  HepRepSectionsVisitor::visitTube(Tube* tube)
   if (m_mode == "type")
     {
       out << "<type name =\"" <<  tube->getName() << "\" >" << std::endl;
-      out << "<attvalue name=\"DrawAs\" value =\"Prism\" showlabel =\"\"/>" << std::endl;
-      out << "<attvalue name=\"Material\" value =\""<< tube->getMaterial() << "\" showlabel =\"\"/>" << std::endl;
+      out << "<attvalue name=\"DrawAs\" value =\"Prism\" showlabel =\"\"/>" 
+          << std::endl;
+      out << "<attvalue name=\"Material\" value =\""<< tube->getMaterial() 
+          << "\" showlabel =\"\"/>" << std::endl;
       out << "<attvalue name=\"Dim\" value =\"(" 
           <<  tube->getZ() << ", " 
           <<  tube->getRin() << ", " 
@@ -329,7 +444,8 @@ void  HepRepSectionsVisitor::visitTube(Tube* tube)
         j->second->getGreen() << "," <<
         j->second->getBlue() << "\" showlabel =\"\"/>" << std::endl;      
       
-      out << "<attvalue name=\"Sensitive\" value =\""<< tube->getSensitive() << "\" showlabel =\"\"/>" << std::endl;
+      out << "<attvalue name=\"Sensitive\" value =\""<< tube->getSensitive() 
+          << "\" showlabel =\"\"/>" << std::endl;
       out << "</type>" << std::endl;
       m_types.push_back(tube->getName());
     }
@@ -337,12 +453,15 @@ void  HepRepSectionsVisitor::visitTube(Tube* tube)
     {
       // Here we build the full qualified Name of the Type
       out << "<instance type=\"" << getFullName()  << "\">" << std::endl;
-      out << "<attvalue name=\"ID\" value =\""<< m_actualID.name() << "\" showlabel =\"\"/>" << std::endl;
+      out << "<attvalue name=\"ID\" value =\""<< m_actualID.name() 
+          << "\" showlabel =\"\"/>" << std::endl;
       xmlUtil::Identifier identifier;
       for(int ii=0;ii<m_actualID.size();ii++)
           identifier.append(m_actualID[ii]);
 
-      out << "<attvalue name=\"IDname\" value =\""<< m_idDictionary->getNameSeqString(identifier) << "\" showlabel =\"\"/>" << std::endl;      
+      out << "<attvalue name=\"IDname\" value =\""
+          << m_idDictionary->getNameSeqString(identifier) 
+          << "\" showlabel =\"\"/>" << std::endl;      
       HepPoint3D v(0,0,0);
       HepPoint3D v1;
       double dz = tube->getZ()/2;
@@ -356,15 +475,19 @@ void  HepRepSectionsVisitor::visitTube(Tube* tube)
       for(unsigned int i=0; i<n; i++)
       {
         angle = 2*M_PI*((double)i/n);
-        v.setX(rout*sin(angle)); v.setY(rout*cos(angle)); v.setZ(-dz); v1 = (atr*v);           
-        out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() << "\" z = \"" << v1.z() << "\">" << std::endl;
+        v.setX(rout*sin(angle)); v.setY(rout*cos(angle)); v.setZ(-dz); 
+        v1 = (atr*v);           
+        out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() 
+            << "\" z = \"" << v1.z() << "\">" << std::endl;
         out << "</point>" << std::endl;
       }
       for(unsigned int i=0; i<n; i++)
       {
         angle = 2*M_PI*((double)i/n);
-        v.setX(rout*sin(angle)); v.setY(rout*cos(angle)); v.setZ(dz); v1 = (atr*v);           
-        out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() << "\" z = \"" << v1.z() << "\">" << std::endl;
+        v.setX(rout*sin(angle)); v.setY(rout*cos(angle)); 
+        v.setZ(dz); v1 = (atr*v);           
+        out << "<point x=\"" << v1.x() <<"\" y = \""  << v1.y() 
+            << "\" z = \"" << v1.z() << "\">" << std::endl;
         out << "</point>" << std::endl;        
       }            
 

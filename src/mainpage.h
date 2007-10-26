@@ -55,6 +55,8 @@ be named after it, e.g. LAT.heprep for topVolume LAT.</p>
 <pre>
    <b>dumpIds.exe</b> aPath/myGeoInput.xml  [anotherPath/output.txt]
 </pre>
+<p>or, to see error output interspersed with normal output, substitute _ for
+the second file path (and redirect with &gt;&amp; to a file if desired).</p>
 <p>See sample output from constsDoc.exe, summary.exe and dumpIds.exe at
 <a href="http://www.slac.stanford.edu/exp/glast/ground/software/geometry/data/RELEASED/">http://www.slac.stanford.edu/exp/glast/ground/software/geometry/data/RELEASED/</a></p>
 <hr>

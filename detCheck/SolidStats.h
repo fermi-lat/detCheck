@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/SolidStats.h,v 1.6 2002/01/19 00:36:22 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/SolidStats.h,v 1.7 2006/03/01 16:04:26 riccardo Exp $
 
 #include <string>
 #include <iostream>
@@ -53,6 +53,7 @@ namespace detCheck {
     virtual void visitEnsemble(detModel::Ensemble* ens);
     virtual void visitBox(detModel::Box* box);
     virtual void visitTube(detModel::Tube* tube);
+    virtual void visitTrap(detModel::Trap* trap);
     virtual void visitSphere(detModel::Sphere* tube);
     virtual void visitPosXYZ(detModel::PosXYZ* pos);
     virtual void visitAxisMPos(detModel::AxisMPos* axisPos);
