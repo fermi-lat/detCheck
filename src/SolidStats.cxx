@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.16 2007/03/09 02:09:09 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/SolidStats.cxx,v 1.17 2007/09/25 21:58:31 lsrea Exp $
 
 #include <cmath>
 #include <cassert>
@@ -16,6 +16,7 @@
 #include "detModel/Sections/Shape.h"
 #include "detModel/Sections/Box.h"
 #include "detModel/Sections/Tube.h"
+#include "detModel/Sections/Trap.h"
 #include "detModel/Sections/Sphere.h"
 #include "detModel/Sections/Choice.h"
 #include "detModel/Sections/PosXYZ.h"
@@ -103,8 +104,8 @@ namespace detCheck {
 
       if (!mat->logCount) continue;
       double mass = mat->cuVol * TO_CU_CM * mat->density;
-      int64 intMass = mass;
-      int64 intVol = (mat->cuVol * TO_CU_CM);
+      int64 intMass = (int64) mass;
+      int64 intVol = (int64) (mat->cuVol * TO_CU_CM);
       
       if ((mapIt->first).compare("Vacuum")) {
         logCount += mat->logCount;
@@ -135,7 +136,7 @@ namespace detCheck {
 
     // Extra output for html
     if (html) { // Put in totals line, close old table. Then start new one
-      int64 intVolTotal = (volTotal * TO_CU_CM);
+      int64 intVolTotal = (int64) (volTotal * TO_CU_CM);
       
       (*m_out) << "<tr><td><b>Totals (no vac)</b></td><td align='right'><b>" 
                << logCount << "</b></td><td align='right'><b>" << physCount 
@@ -154,12 +155,12 @@ namespace detCheck {
       for (LogVolMapIt logIt = m_logVols.begin(); logIt != m_logVols.end();
            ++logIt) {
         LogVol* log = logIt->second;
-        int64 intVol = log->vol * TO_CU_CM;
-        int64 intConvexVol = log->convexVol * TO_CU_CM;
-        int64 intTotalVol = log->vol * log->nCopy * TO_CU_CM;
+        int64 intVol = (int64) (log->vol * TO_CU_CM);
+        int64 intConvexVol = (int64) (log->convexVol * TO_CU_CM);
+        int64 intTotalVol = (int64) (log->vol * log->nCopy * TO_CU_CM);
         MatMapIt it = m_mats.find(log->matName);
         double density = it->second->density;
-        int64 intMass = density * log->vol * log->nCopy * TO_CU_CM;
+        int64 intMass = (int64) (density * log->vol * log->nCopy * TO_CU_CM);
 
         (*m_out) << "<tr><td>" << log->name;
         if (log->envelope) (*m_out) << "(E)";
@@ -339,6 +340,12 @@ namespace detCheck {
     registerShape(tube, cuVol);
   }
 
+  void SolidStats::visitTrap(detModel::Trap* trap) {
+    double cuVol = trap->getY() * trap->getZ() * 
+      0.5 * (trap->getX1() + trap->getX2());
+    registerShape(trap, cuVol);
+  }
+
   void SolidStats::visitSphere(detModel::Sphere* sphere) {
     if (PI <= 0.0) {
       double one = 1.0;
@@ -394,7 +401,6 @@ namespace detCheck {
     return;
   }
 
-  //  bool SolidStats::registerShape(detModel::Shape* shape, double cuVol) {
   SolidStats::LogVol* SolidStats::registerShape(detModel::Shape* shape, 
                                                 double cuVol) {
     LogVol* logVol;

@@ -54,6 +54,11 @@ namespace detModel{
     virtual void visitTube(Tube*);
 
     /**
+     * This is the visitor for the Trapezoidal solid
+     */
+    virtual void visitTrap(Trap*);
+
+    /**
      * This is the visitor for the Sphere 
      */
     virtual void visitSphere(Sphere*){};
