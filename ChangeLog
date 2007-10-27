@@ -1,4 +1,35 @@
 ------------------------------------------------------------
+TAG
+Tag name: v1r7, operation: add
+Package: detCheck
+User: jrb  Fri Oct 26 17:58:48 2007
+Files:
+  detCheck/.cvsignore  1.2
+  detCheck/ChangeLog  1.122
+  detCheck/cmt/.cvsignore  1.1.1.1
+  detCheck/cmt/requirements  1.22
+  detCheck/detCheck/Overlaps.h  1.6
+  detCheck/detCheck/SolidStats.h  1.8
+  detCheck/doc/checkOverlap.txt  1.1.1.1
+  detCheck/doc/release.notes  1.25
+  detCheck/doc/standardRun.txt  1.5
+  detCheck/src/overlapsMain.cxx  1.3
+  detCheck/src/dumpIds.cxx  1.6
+  detCheck/src/SolidStats.cxx  1.18
+  detCheck/src/HepRepSectionsVisitor.h  1.7
+  detCheck/src/HepRep.cxx  1.4
+  detCheck/src/Overlaps.cxx  1.17
+  detCheck/src/mainpage.h  1.7
+  detCheck/src/constsDocMain.cxx  1.2
+  detCheck/src/solidStatsMain.cxx  1.6
+  detCheck/src/HepRepSectionsVisitor.cxx  1.11
+  detCheck/xml/simpleComposition.xml  1.1.1.1
+  detCheck/xml/test-overlap.xml  1.1.1.1
+  detCheck/xml/simpleStack.xml  1.1.1.1
+  detCheck/xml/materials.xml  1.1.1.1
+
+    *
+------------------------------------------------------------
 User: jrb  Fri Oct 26 17:58:41 PDT 2007
 detCheck/doc
 
