@@ -2,6 +2,14 @@
 TAG
 Tag name: detCheck-01-07-00, operation: add
 Package: detCheck
+User: glastrm  Mon Apr  7 08:07:50 2008
+Files:
+
+    *
+------------------------------------------------------------
+TAG
+Tag name: detCheck-01-07-00, operation: add
+Package: detCheck
 User: glastrm  Tue Mar 11 13:16:06 2008
 Files:
   detCheck/.cvsignore  1.2
