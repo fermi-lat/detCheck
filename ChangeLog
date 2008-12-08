@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: ecephas  Mon Dec  8 13:40:25 PST 2008
+GlastRelease-scons/detCheck
+
+Modified Files:
+	SConscript 
+Log Message:
+Check in SConscript for detCheck v1r7 (for branch-tag, GlastReleasev15r49) 
+    *
+------------------------------------------------------------
 User: ecephas  Fri Aug 15 14:42:38 PDT 2008
 GlastRelease-scons/detCheck
 
