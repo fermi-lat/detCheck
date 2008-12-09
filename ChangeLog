@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: ecephas  Mon Dec  8 16:08:44 PST 2008
+GlastRelease-scons/detCheck
+
+Modified Files:
+	detCheckLib.py 
+Log Message:
+Check in detCheckLib.py for detCheck v1r7 (branch-tag, GlastReleasev15r49).
+    *
+------------------------------------------------------------
 TAG
 Tag name: detCheck-01-07-00, operation: add
 Package: detCheck
