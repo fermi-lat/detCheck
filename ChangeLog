@@ -1,5 +1,15 @@
 ------------------------------------------------------------
 TAG
+Tag name: GlastRelease-15-49-00, operation: add
+Package: detCheck
+User: glastrm  Fri Jan  9 13:28:16 2009
+Files:
+  detCheck/SConscript  1.2
+  detCheck/detCheckLib.py  1.2
+
+    *
+------------------------------------------------------------
+TAG
 Tag name: GlastRelease-15-50-10, operation: del
 Package: detCheck
 User: glastrm  Fri Jan  9 08:31:31 2009
