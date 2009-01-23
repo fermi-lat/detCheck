@@ -1,4 +1,18 @@
 ------------------------------------------------------------
+TAG
+Tag name: detCheck-01-07-00, operation: mov
+Package: detCheck
+User: glastrm  Thu Jan 22 16:31:51 2009
+Files:
+  detCheck/SConscript  1.3
+  detCheck/SConscript  1.3
+  detCheck/SConscript  1.3
+  detCheck/detCheckLib.py  1.3
+  detCheck/detCheckLib.py  1.3
+  detCheck/detCheckLib.py  1.3
+
+    *
+------------------------------------------------------------
 User: ecephas  Thu Jan 22 16:21:06 PST 2009
 GlastRelease-scons/detCheck
 
