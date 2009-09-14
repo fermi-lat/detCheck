@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
 
     xmlUtil::Identifier identifier;
     unsigned iField;
-    for (iField = 0; iField < volIdent.size(); iField++) {
+    for (iField = 0; iField < (unsigned) volIdent.size(); iField++) {
       identifier.append(volIdent[iField]);
     }
     (*pout) << *(pDict->getNamedId(identifier)) << "  " << std::endl;    
