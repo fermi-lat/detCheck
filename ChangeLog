@@ -1,4 +1,14 @@
 ------------------------------------------------------------
+User: jrb  Mon Sep 14 12:35:07 PDT 2009
+GlastRelease-scons/detCheck/src
+
+Modified Files:
+	HepRepSectionsVisitor.cxx dumpIds.cxx 
+Log Message:
+Fix compiler warnings
+
+    *
+------------------------------------------------------------
 TAG
 Tag name: detCheck-01-07-00, operation: mov
 Package: detCheck
