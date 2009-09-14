@@ -1,5 +1,16 @@
 ------------------------------------------------------------
 User: jrb  Mon Sep 14 15:12:38 PDT 2009
+GlastRelease-scons/detCheck/cmt
+
+Modified Files:
+	requirements 
+Log Message:
+SConscript, .cvsignore: Updates for SCons build
+requirements: get ready for tag
+
+    *
+------------------------------------------------------------
+User: jrb  Mon Sep 14 15:12:38 PDT 2009
 GlastRelease-scons/detCheck
 
 Modified Files:
