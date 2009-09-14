@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
       EOH
 
+ detCheck-01-07-01 14-Sep-2009    jrb Fix compile warnings; update SConscript 
    v1r7  26-Oct-2007 jrb Support trapezoidal prisms
   v1r6p2 12-Sep-2007 jrb In dumpIds 1) Output all 3 Euler angles 2) write all 
                          output to stdout if 2nd arg is _  (underscore)
