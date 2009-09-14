@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: jrb  Mon Sep 14 15:18:14 PDT 2009
+GlastRelease-scons/detCheck
+
+Modified Files:
+	SConscript 
+Log Message:
+GoGui_auto-tag
+    *
+------------------------------------------------------------
 User: jrb  Mon Sep 14 15:12:38 PDT 2009
 GlastRelease-scons/detCheck/cmt
 
