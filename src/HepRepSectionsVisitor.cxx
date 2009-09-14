@@ -465,7 +465,7 @@ void  HepRepSectionsVisitor::visitTube(Tube* tube)
       HepPoint3D v(0,0,0);
       HepPoint3D v1;
       double dz = tube->getZ()/2;
-      double rin = tube->getRin();
+      // double rin = tube->getRin();
       double rout = tube->getRout();
       HepTransform3D atr = m_actualTransform.back();
 
