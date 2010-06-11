@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: jrb  Thu Jun 10 17:43:39 PDT 2010
+GlastRelease-scons/detCheck
+
+Modified Files:
+	SConscript 
+Log Message:
+updates for SCons build
+    *
+------------------------------------------------------------
 TAG
 Tag name: detCheck-01-07-01, operation: add
 Package: detCheck
