@@ -1,5 +1,5 @@
 # -*- python -*-
-# $Header: /nfs/slac/g/glast/ground/cvs/GlastRelease-scons/detCheck/SConscript,v 1.4 2009/09/14 22:12:38 jrb Exp $ 
+# $Header: /nfs/slac/g/glast/ground/cvs/GlastRelease-scons/detCheck/SConscript,v 1.5 2009/09/14 22:18:14 jrb Exp $ 
 # Authors: Joanne Bogart <jrb@slac.stanford.edu>
 # Version: detCheck-01-07-01
 Import('baseEnv')
@@ -7,8 +7,6 @@ Import('listFiles')
 Import('packages')
 progEnv = baseEnv.Clone()
 libEnv = baseEnv.Clone()
-
-libEnv.Tool('detCheckLib', depsOnly = 1)
 
 detCheck = libEnv.StaticLibrary('detCheck', ['src/Overlaps.cxx', 'src/SolidStats.cxx', 'src/HepRepSectionsVisitor.cxx'])
 
