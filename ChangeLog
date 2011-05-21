@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: heather  Sat May 21 13:12:18 PDT 2011
+detCheck
+
+Modified Files:
+	SConscript 
+Log Message:
+use of CLHEP
+    *
+------------------------------------------------------------
 TAG
 Tag name: detCheck-01-07-02, operation: add
 Package: detCheck
