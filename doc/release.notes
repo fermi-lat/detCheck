@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
       EOH
 
+ detCheck-01-07-03 21-May-2011    hmk patch requirements to use any CLHEP
  detCheck-01-07-02 12-Jun-2010    jrb upgrades for SCons builds
  detCheck-01-07-01 14-Sep-2009    jrb Fix compile warnings; update SConscript 
    v1r7  26-Oct-2007 jrb Support trapezoidal prisms

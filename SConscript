@@ -1,7 +1,7 @@
 # -*- python -*-
-# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/SConscript,v 1.6 2010/06/11 00:43:39 jrb Exp $ 
+# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/SConscript,v 1.7 2010/06/12 22:42:59 jrb Exp $ 
 # Authors: Joanne Bogart <jrb@slac.stanford.edu>
-# Version: detCheck-01-07-02
+# Version: detCheck-01-07-03
 Import('baseEnv')
 Import('listFiles')
 Import('packages')
