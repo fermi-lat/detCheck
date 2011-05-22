@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: heather  Sat May 21 20:17:29 PDT 2011
+detCheck
+
+Modified Files:
+	SConscript 
+Log Message:
+update use of HepGeom namespace
+    *
+------------------------------------------------------------
 TAG
 Tag name: detCheck-01-07-03, operation: add
 Package: detCheck
