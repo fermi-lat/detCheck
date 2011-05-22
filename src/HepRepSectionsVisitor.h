@@ -100,7 +100,7 @@ namespace detModel{
 
     void setIDPrefix(idents::VolumeIdentifier pr){m_idPrefix = pr;};
 
-    void setPrefixTransform(HepTransform3D t){m_prefixTransform = t;};
+    void setPrefixTransform(HepGeom::Transform3D t){m_prefixTransform = t;};
 
     void setIdDictionary(xmlUtil::IdDict* id){m_idDictionary = id;};
 
@@ -113,8 +113,8 @@ namespace detModel{
     std::string m_mode;
     std::string m_outputFile;
 
-    std::vector<HepTransform3D> m_actualTransform;
-    HepTransform3D m_prefixTransform;
+    std::vector<HepGeom::Transform3D> m_actualTransform;
+    HepGeom::Transform3D m_prefixTransform;
     std::vector<std::string> m_types;
 
     /// This is used to build the full qualified name
