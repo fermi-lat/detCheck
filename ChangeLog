@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: heather  Sat May 21 20:17:30 PDT 2011
+detCheck/src
+
+Modified Files:
+	HepRepSectionsVisitor.cxx HepRepSectionsVisitor.h 
+Log Message:
+update use of HepGeom namespace
+    *
+------------------------------------------------------------
 User: heather  Sat May 21 20:17:29 PDT 2011
 detCheck/doc
 
