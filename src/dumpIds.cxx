@@ -127,8 +127,8 @@ int main(int argc, char* argv[]) {
     const detModel::PositionedVolume* pPosVol = 
       idMap.getPositionedVolumeByID(volIdent);
 
-    Hep3Vector trans = pPosVol->getTranslation();
-    HepRotation rot=pPosVol->getRotation();
+    CLHEP::Hep3Vector trans = pPosVol->getTranslation();
+    CLHEP::HepRotation rot=pPosVol->getRotation();
     double phi = rot.getPhi();
     double theta = rot.getTheta();
     double psi = rot.getPsi();

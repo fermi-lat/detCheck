@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
       EOH
 
+ detCheck-01-07-5  23-May-2011    hmk Hopefully caught all the CLHEP needs
  detCheck-01-07-04 21-May-2011    hmk CLHEP 2.1.0.1 namespace
  detCheck-01-07-03 21-May-2011    hmk patch requirements to use any CLHEP
  detCheck-01-07-02 12-Jun-2010    jrb upgrades for SCons builds
