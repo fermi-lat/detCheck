@@ -1,5 +1,14 @@
 ------------------------------------------------------------
 User: heather  Mon May 23 08:22:17 PDT 2011
+detCheck/src
+
+Modified Files:
+	HepRepSectionsVisitor.cxx dumpIds.cxx 
+Log Message:
+couple more CLHEP mods
+    *
+------------------------------------------------------------
+User: heather  Mon May 23 08:22:17 PDT 2011
 detCheck/doc
 
 Modified Files:
