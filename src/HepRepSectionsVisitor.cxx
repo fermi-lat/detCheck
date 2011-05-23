@@ -6,6 +6,7 @@
 #include "idents/VolumeIdentifier.h"
 
 #include "CLHEP/Vector/Rotation.h"
+#include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Vector/ThreeVector.h"
 #include "CLHEP/Geometry/Transform3D.h"
 
@@ -419,6 +420,7 @@ void  HepRepSectionsVisitor::visitTrap(Trap* trap)
 
 void  HepRepSectionsVisitor::visitTube(Tube* tube)
 {
+  typedef HepGeom::Point3D<double> HepPoint3D;
   m_actualName.push_back(tube->getName());
 
   typedef std::map<std::string, Color*> M;
