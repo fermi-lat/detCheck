@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: jrb  Tue Feb 28 13:08:48 PST 2012
+GlastRelease-scons/detCheck/src
+
+Modified Files:
+	overlapsMain.cxx solidStatsMain.cxx 
+Log Message:
+Use std::string for modern compilers. Use sensible default args. 
+    *
+------------------------------------------------------------
 User: cohen  Tue Feb 28 02:50:14 PST 2012
 GlastRelease-scons/detCheck/src
 
