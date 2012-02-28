@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: jrb  Tue Feb 28 14:04:10 PST 2012
+GlastRelease-scons/detCheck/detCheck
+
+Modified Files:
+	Overlaps.h 
+Log Message:
+eliminate extra qualification in Overlaps class
+    *
+------------------------------------------------------------
 User: jrb  Tue Feb 28 13:08:48 PST 2012
 GlastRelease-scons/detCheck/src
 
