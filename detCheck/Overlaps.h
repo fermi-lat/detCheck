@@ -1,4 +1,4 @@
-// $Header: /nfs/slac/g/glast/ground/cvs/detCheck/detCheck/Overlaps.h,v 1.5 2007/03/24 08:07:13 jrb Exp $
+// $Header: /nfs/slac/g/glast/ground/cvs/GlastRelease-scons/detCheck/detCheck/Overlaps.h,v 1.6 2007/03/25 07:30:58 jrb Exp $
 
 #include <string>
 #include <iostream>
@@ -165,7 +165,7 @@ namespace detCheck {
     bool checkLocs(std::vector<Location>& locs);
     bool pairOk(Location* loc1, Location* loc2);
 
-    bool Overlaps::checkBB(BB& bb1, BB& bb2);
+    bool checkBB(BB& bb1, BB& bb2);
     //! Extra checking to eliminate false positives if first loc describes
     //! sphere, second describes bo
     const bool checkSphereBox(Location* sphereLoc, Location* boxLoc);
