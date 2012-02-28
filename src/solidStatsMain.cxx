@@ -1,10 +1,11 @@
-//      $Header: /nfs/slac/g/glast/ground/cvs/detCheck/src/solidStatsMain.cxx,v 1.5 2002/01/18 19:04:56 jrb Exp $  
+//      $Header: /nfs/slac/g/glast/ground/cvs/GlastRelease-scons/detCheck/src/solidStatsMain.cxx,v 1.6 2004/03/19 19:06:32 jrb Exp $  
 #include <string>
 #include <iostream>
 #include <vector>
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/XercesBuilder.h"
 #include "detCheck/SolidStats.h"
+#include "facilities/commonUtilities.h"
 
 /** 
     @file solidStatsMain.cxx
@@ -19,28 +20,29 @@
 */
 int main(int argc, char* argv[]) {
 
-  char* inFile = "../xml/test-solidStats.xml";
-  char* outFile = "";
-  char* topVolume = "";
-  char* choiceMode= "propagate";
+  std::string inFile = "$(XMLGEODBSXMLPATH)/flight/flight.xml";
+  std::string outFile = "";
+  std::string topVolume = "oneCAL";
+  std::string choiceMode= "propagate";
 
-
+  facilities::commonUtilities::setupEnvironment();
+  
   // Supplied argument overrides default test file
   if (argc > 1) {
-    inFile = argv[1];
+    inFile = std::string(argv[1]);
   }
 
   // Supplied argument can override default output file (std::cout)
   if (argc > 2) {
-    outFile = argv[2];
+    outFile = std::string(argv[2]);
   }
 
   if (argc > 3) {
-    topVolume = argv[3];
+    topVolume = std::string(argv[3]);
   }
 
   if (argc > 4) {
-    choiceMode = argv[4];
+    choiceMode = std::string(argv[4]);
   }
 
   detModel::Manager* manager = detModel::Manager::getPointer();
@@ -58,7 +60,7 @@ int main(int argc, char* argv[]) {
 
 
   detCheck::SolidStats* sStats = 
-    new detCheck::SolidStats(std::string(topVolume));
+    new detCheck::SolidStats(topVolume);
 
   // Uncomment the line below for the gory details of traversal
   //  sStats->setDiagnostic("diag.txt");
@@ -67,7 +69,7 @@ int main(int argc, char* argv[]) {
   manager->startVisitor(sStats);
 
   // Output results
-  sStats->report(std::string(outFile));
+  sStats->report(outFile);
 
   return true;
 }

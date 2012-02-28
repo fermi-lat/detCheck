@@ -5,6 +5,7 @@
 #include "detModel/Management/Manager.h"
 #include "detModel/Management/XercesBuilder.h"
 #include "detCheck/Overlaps.h"
+#include "facilities/commonUtilities.h"
 
 /// Look for overlaps in a geometric representation.
 /// Arguments (with their [defaults]) are
@@ -15,8 +16,11 @@
 /// will turn on verbose mode.
 int main(int argc, char* argv[]) {
 
-  std::string inFile = "../xml/test-overlap.xml";
+  //std::string inFile = "$(DETCHECKXMLPATH)/test-overlap.xml";
+  std::string inFile = "$(XMLGEODBSXMLPATH)/flight/flight.xml";
   std::string outFile = "";
+
+  facilities::commonUtilities::setupEnvironment();
 
   // Supplied argument overrides default test file
   if (argc > 1) {
