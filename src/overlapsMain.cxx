@@ -15,8 +15,8 @@
 /// will turn on verbose mode.
 int main(int argc, char* argv[]) {
 
-  char* inFile = "../xml/test-overlap.xml";
-  char* outFile = "";
+  std::string inFile = "../xml/test-overlap.xml";
+  std::string outFile = "";
 
   // Supplied argument overrides default test file
   if (argc > 1) {
