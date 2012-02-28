@@ -1,4 +1,13 @@
 ------------------------------------------------------------
+User: cohen  Tue Feb 28 02:50:14 PST 2012
+GlastRelease-scons/detCheck/src
+
+Modified Files:
+	overlapsMain.cxx 
+Log Message:
+change char* into std::string to avoid string litteral evaluation warning
+    *
+------------------------------------------------------------
 TAG
 Tag name: GlastRelease-17-35-24-gr24, operation: add
 Package: detCheck
