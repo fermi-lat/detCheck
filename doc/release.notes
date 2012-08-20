@@ -3,6 +3,7 @@
  * Coordinator:  J. Bogart
       EOH
 
+ detCheck-01-08-00 20-Aug-2012    jrb for Windows no-install-headers
  detCheck-01-07-06 28-Feb-2012    jrb patches for newer compilers; set default args more sensibly
  detCheck-01-07-5  23-May-2011    hmk Hopefully caught all the CLHEP needs
  detCheck-01-07-04 21-May-2011    hmk CLHEP 2.1.0.1 namespace

@@ -1,6 +1,6 @@
 package detCheck
-# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/cmt/requirements,v 1.27 2011/05/23 15:22:17 heather Exp $
-version v1r7p6
+# $Header: /nfs/slac/g/glast/ground/cvs/detCheck/cmt/requirements,v 1.28 2012/02/28 22:05:06 jrb Exp $
+version v1r8p0
 author Joanne Bogart <jrb@slac.stanford.edu>
 
 use detModel v2r*
